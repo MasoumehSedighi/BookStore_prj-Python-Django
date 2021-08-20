@@ -1,0 +1,23 @@
+<!-- این صفحه جزییات هر کتاب را نشان میدهد و یک فرم دارد که تعداد کتاب را انتخاب و به سبد خرید اضافه میکنیم -->
+{% extends 'base.html' %}
+{% block title %}{{ object.title }}{% endblock title %}
+{% block content %}
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <div class="book-detail">
+        <h2><a href="">{{ object.title }}</a></h2>
+        <p>Author: {{ object.author }}</p>
+        <p>price:{{ object.price }}</p>
+        <p>discount:{{ book.get_item_discount }}</p>
+        <p>stock: {{ object.stock }}</p>
+        <form  action="{% url 'cart:cart_add' book.id %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input id="cart_form" type="submit" value="Add">
+        </form>
+    </div>
+    <script>
+        $("#cart_form").click(function() {
+          alert("کالا به سبد اضافه شد");
+        });
+    </script>
+{% endblock content %}

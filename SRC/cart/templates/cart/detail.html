@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load bootstrap_icons %}
+{% block content %}
+    <div class=" my-5 table-responsive-lg">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">ردیف</th>
+                <th scope="col">نام کتاب</th>
+                <th scope="col">تعداد</th>
+                <th scope="col">قیمت واحد</th>
+                <th scope="col">قیمت جمع</th>
+                <th scope="col">حذف کردن</th>
+            </tr>
+            </thead>
+            <tbody >
+            {%  for item in cart %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td><a href="{{ book.get_absolute_url }}">{{ item.book }}</a></td>
+                <td>{{ item.quantity }}</td>
+                <td>{{item.price}}</td>
+                <td>{{item.total_price}}</td>
+                <td><a href="{% url 'cart:cart_remove' item.book.id %}">{% bs_icon 'trash' color='red' size='1.2em'  %}</a></td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td>جمع سبد خرید</td>
+                <td colspan="3"></td>
+                <td>{{ cart.get_final_price }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    {% if messages %}
+        <div class="alert alert-dismissible alert-danger w-25 h-25 ">
+            {% for message in messages %}
+            <h6 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h6>
+            {% endfor %}
+        </div>
+    {% endif %}
+     <a href="{% url 'orders:create' %}" class="btn btn-primary">ادامه فرایند خرید</a>
+    </form>
+{% endblock %}

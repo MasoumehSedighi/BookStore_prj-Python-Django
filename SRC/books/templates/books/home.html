@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_style %}
+    <link rel="stylesheet" href={% static 'home.css' %}>
+{% endblock %}
+{% block title %}
+    خانه
+{% endblock title %}
+{% block content %}
+        <div class="row my-5">
+            <div>
+                {% for book in book_list %}
+                    <div class="card " style="width: 16rem; display:inline-block">
+                        <img src="{{ book.image.url }} " class="py-3 w-50 rounded mx-auto d-block" alt="showcase">
+                        <div class="card-body text-center">
+                            <a href="{{ book.get_absolute_url }}" class="card-title text-decoration-none">{{ book.title }}</a>
+                        </div>
+                    </div>
+                {% endfor %}
+                <br />
+                <!-- تقسیم بندی صفحات لیست کتاب ها  -->
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1">&laquo; first</a>
+                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                        {% endif %}
+
+                        <span class="current">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                        </span>
+
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}">next</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <br/>
+{% endblock content %}
