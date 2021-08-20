@@ -1,12 +1,20 @@
 from django.contrib import admin
+from .models import OrderItem, Order, Coupon
 
-# Register your models here.
-from .models import Order, OrderItems, Cart, Coupon
 
-admin.site.register(Order)
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    raw_id_fields = ('book',)
 
-admin.site.register(OrderItems)
 
-admin.site.register(Cart)
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'created', 'updated')
+    inlines = (OrderItemInline,)
 
-admin.site.register(Coupon)
+
+@admin.register(Coupon)
+class CouponAdmin(admin.ModelAdmin):
+    list_display = ('code', 'valid_from', 'valid_to', 'discount', 'active')
+    list_filter = ('active', 'valid_from', 'valid_to')
+    search_fields = ('code',)
