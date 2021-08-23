@@ -1,8 +1,10 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.urls import reverse
-# Create your models here.
+from decimal import Decimal
 
+
+# Create your models here.
 
 class Category(models.Model):
     """ مدلی است که شامل گروه های کتابها میباشد و دو فیلد title برای نام دسته و slug برای آدرس لینک دارد """
@@ -87,10 +89,11 @@ class Book(models.Model):
 
     def get_item_discount(self):
         if self.cash_discount:
-            return self.cash_discount.amount
+            discount = self.cash_discount.amount
+            return Decimal(discount)
         if self.pers_discount:
-            price_discount = (self.pers_discount.percentage / 100) * self.price
-            return price_discount
+            discount = (self.pers_discount.percentage / 100) * self.price
+            return Decimal(discount)
         else:
-            price_discount = 0
-            return price_discount
+            discount = 0
+            return Decimal(discount)

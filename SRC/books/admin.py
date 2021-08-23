@@ -1,7 +1,6 @@
 from django.contrib import admin
-
-# Register your models here.
 from .models import Book, Category, DiscountCash, DiscountPercent
+# Register your models here.
 
 
 @admin.register(Category)
@@ -16,19 +15,17 @@ class BookAdmin(admin.ModelAdmin):
     list_display_links = ['title']
     prepopulated_fields = {'slug': ('title',)}
 
-
     def categories(self, obj):
         return [cat.title for cat in obj.category.all()]
 
 
 @admin.register(DiscountCash)
-class CouponAdmin(admin.ModelAdmin):
+class DiscountCashAdmin(admin.ModelAdmin):
     list_display = ('amount', 'valid_from', 'valid_to','active')
     list_filter = ('active', 'valid_from', 'valid_to')
 
 
-
 @admin.register(DiscountPercent)
-class CouponAdmin(admin.ModelAdmin):
+class DiscountPercentAdmin(admin.ModelAdmin):
     list_display = ('percentage', 'valid_from', 'valid_to','active')
     list_filter = ('active', 'valid_from', 'valid_to')

@@ -8,12 +8,14 @@ from .forms import CartAddForm
 # Create your views here.
 
 def detail(request):
+    """ جزییات سبذ موجود را به صفحه میفرستد """
     cart = Cart(request)
     return render(request, 'cart/detail.html', {'cart': cart})
 
 
 @require_POST
 def cart_add(request, book_id):
+    """اطلاعات کتاب و تعداد آن را از کاربر میگیرد سشن cart  را میسازد و از طریق متد add به سبد اضافه میکند"""
     cart = Cart(request)
     book = get_object_or_404(Book, id=book_id)
     form = CartAddForm(request.POST)
@@ -24,6 +26,7 @@ def cart_add(request, book_id):
 
 
 def cart_remove(request, book_id):
+    """ برای پاک کردن هر کتاب از سبد میباشد"""
     cart = Cart(request)
     book = get_object_or_404(Book, id=book_id)
     cart.remove(book)

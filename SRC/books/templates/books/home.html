@@ -2,17 +2,17 @@
 {% load static %}
 
 {% block page_style %}
-    <link rel="stylesheet" href={% static 'home.css' %}>
+    <link rel="stylesheet" href={% static 'css/home.css' %}>
 {% endblock %}
 {% block title %}
-    خانه
+    فروشگاه کتاب
 {% endblock title %}
 {% block content %}
         <div class="row my-5">
             <div>
                 {% for book in book_list %}
-                    <div class="card " style="width: 16rem; display:inline-block">
-                        <img src="{{ book.image.url }} " class="py-3 w-50 rounded mx-auto d-block" alt="showcase">
+                    <div class="card " style="width:16rem; display:inline-block">
+                        <img src="{{ book.image.url }} " class="py-3 w-50 h-50  rounded mx-auto d-block" alt="showcase">
                         <div class="card-body text-center">
                             <a href="{{ book.get_absolute_url }}" class="card-title text-decoration-none">{{ book.title }}</a>
                         </div>

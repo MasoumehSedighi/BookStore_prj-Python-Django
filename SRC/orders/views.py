@@ -21,10 +21,10 @@ def detail(request, order_id):
 def order_create(request):
     """ایجاد سفارش و کم کردن تعداد موجودی سبد از موجودی انبار"""
     cart = Cart(request)
-    order = Order.objects.create(user=request.user)
+    order = Order.objects.create(user=request.user, active=True)
     for item in cart:
         order_item = OrderItem.objects.create(order=order, book=item['book'],
-                                              price=item['price'], quantity=item['quantity'])
+                                              price=item['price'], quantity=item['quantity'], discount=item['discount'])
 
         book = Book.objects.get(id=order_item.book.id)
         if book.stock >= order_item.quantity:
@@ -33,7 +33,6 @@ def order_create(request):
         else:
             messages.error(request, f'"{book.title} موجودی کافی نمیباشد /"', 'danger')
             return render(request, 'cart/detail.html', {'cart': cart})
-    # cart.clear()
     return redirect('orders:detail', order.id)
 
 
@@ -51,3 +50,19 @@ def coupon_apply(request, order_id):
         except Coupon.DoesNotExist:
             messages.error(request, 'کد تخفیف نامعتبر میباشد ', 'danger')
             return redirect('orders:detail', order_id)
+
+
+def complete_order(request):
+    cart = Cart(request)
+    order = Order.objects.get(user=request.user.id, active=True)
+    message = "پرداخت با موفقیت انجام شد."
+    order.active = False
+    order.payment = True
+    order.updated = timezone.now()
+    order.save()
+    cart.clear()
+    context = {
+        'message': message,
+    }
+    print(context)
+    return render(request, 'order_complete.html', context)

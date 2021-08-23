@@ -1,22 +1,16 @@
+from django.contrib import messages
 from django.db.models import Q
-from django.shortcuts import render
-
-# Create your views here.
-from django.utils import timezone
-from django.views.generic import ListView, TemplateView, DetailView
+from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormMixin
-
-from books.models import Book, DiscountCash, DiscountPercent
+from books.models import Book
 from cart.forms import CartAddForm
 
 
-# class Home(TemplateView):
-#     template_name = 'home.html'
-#
+# Create your views here.
 
 class HomeListView(ListView):
     """این متد لیست نمام کتاب ها را در خانه نشان میدهد"""
-    paginate_by = 4
+    paginate_by = 6
     model = Book
     template_name = 'books/home.html'
 
@@ -47,10 +41,14 @@ class SearchResultsListView(ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('q')
-
-        return Book.objects.filter(
+        search = Book.objects.filter(
             Q(title__icontains=query) | Q(author__icontains=query)
         )
+        if search:
+            return search
+        else:
+            message = messages.info(self.request, 'نتیجه یافت نشد')
+            return message
 
 
 class BookDetailView(FormMixin, DetailView):

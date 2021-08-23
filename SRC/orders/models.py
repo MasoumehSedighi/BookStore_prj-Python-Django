@@ -3,7 +3,6 @@ from django.db import models
 from django.conf import settings
 from books.models import Book
 
-
 # Create your models here.
 
 
@@ -23,7 +22,7 @@ class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
     created = models.DateTimeField(auto_now_add=True, null=True)
     updated = models.DateTimeField(auto_now=True, null=True)
-    active = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
     payment = models.BooleanField(default=False)
     discount = models.IntegerField(blank=True, null=True, default=None)
 
@@ -47,10 +46,11 @@ class OrderItem(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='order_items')
     price = models.IntegerField()
     quantity = models.PositiveSmallIntegerField(default=1)
+    discount = models.IntegerField(blank=True, null=True, default=None)
 
     def __str__(self):
         return str(self.id)
 
     def get_cost(self):
-        return self.price * self.quantity
+        return self.price * self.quantity - self.discount
 

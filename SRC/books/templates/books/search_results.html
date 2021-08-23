@@ -1,12 +1,22 @@
 {% extends 'base.html' %}
 {% block title %}Search{% endblock title %}
 {% block content %}
-    <h1>Search Results</h1>
-    {% for book in book_list %}
-        <div>
-            <h3><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></h3>
-            <p>Author: {{ book.author }}</p>
-            <p>Price: $ {{ book.price }}</p>
-        </div>
-    {% endfor %}
+    <div class="conainer my-3">
+        <h1>نتیجه جستجو</h1>
+    <hr>
+        {% for book in book_list %}
+                <div>
+                    <h3><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></h3>
+                    <p><span>نام نویسنده : </span>{{ book.author}} </p>
+                    <p><span>قیمت : </span>{{ book.price }}</p>
+                </div>
+        {% endfor %}
+            {% if messages %}
+                <div class="alert alert-dismissible alert-danger w-25 h-25 ">
+                {% for message in messages %}
+                <h6 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h6>
+                {% endfor %}
+                </div>
+            {% endif %}
+    </div>
 {% endblock content %}

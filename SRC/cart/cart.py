@@ -1,7 +1,6 @@
 from books.models import Book
 from decimal import Decimal
 
-
 CART_SESSION_ID = 'cart'
 
 
@@ -16,17 +15,22 @@ class Cart:
         self.cart = cart
 
     def __iter__(self):
+        """ار این قسمت برای قابل iterable کردن cart و قابل حلقه زدن در صفحه detail.html است """
         book_ids = self.cart.keys()
+        """کلیدهای کارت که همان آی دی کتاب انتخاب شده میباشد را برمیگرداند"""
         books = Book.objects.filter(id__in=book_ids)
         cart = self.cart.copy()
         for book in books:
             cart[str(book.id)]['book'] = book
+            cart[str(book.id)]['discount'] = book.get_item_discount()
 
         for item in cart.values():
-            item['total_price'] = Decimal(item['price']) * item['quantity']
+            """قیمت کل هر ردیف از سبد را حساب میکند"""
+            item['total_price'] = Decimal(item['price']) * item['quantity'] - Decimal(item['discount'])
             yield item
 
     def add(self, book, quantity):
+        """کتاب و تعداد آن را به سبد اضافه میکند"""
         book_id = str(book.id)
         if book_id not in self.cart:
             """اگر محصول در سبد خرید نبود یک session  از آن میسازد"""
@@ -49,8 +53,10 @@ class Cart:
         self.session.modified = True
 
     def get_final_price(self):
-        return sum(Decimal(item['price']) * item['quantity'] for item in self.cart.values())
+        """قیمت کل سبد را حساب میکند"""
+        return sum(Decimal(item['price']) * item['quantity'] - Decimal(item['discount']) for item in self.cart.values())
 
-    # def clear(self):
-    #     del self.session[CART_SESSION_ID]
-    #     self.save()
+    def clear(self):
+        """کل سبذ را پاک میکند"""
+        del self.session[CART_SESSION_ID]
+        self.save()

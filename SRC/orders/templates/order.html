@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block content %}
     <h3> شماره سفارش : {{ order.reference_number }}</h3>
     <p>مبلغ قابل پرداخت : {{ order.get_total_price }} </p><br/>
@@ -17,5 +16,9 @@
             {% endfor %}
         </div>
     {% endif %}
-
+    {% if order %}
+        <a href="{% url 'orders:complete_order' %}">
+            <input type="submit" id="btn-logic" class="btn btn-success" value="Purchase">
+        </a>
+    {% endif %}
 {% endblock %}
