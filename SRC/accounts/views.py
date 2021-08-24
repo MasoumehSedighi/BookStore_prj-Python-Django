@@ -15,7 +15,7 @@ def user_login(request):
             print(cd)
             if user is not None:
                 login(request, user)
-                # messages.success(request, 'you logged in successfully', 'success')
+                messages.success(request, 'you logged in successfully', 'success')
                 return redirect('book:home')
             else:
                 messages.error(request, 'ایمیل با پسورد اشتباه است', 'danger')
@@ -35,10 +35,14 @@ def user_register(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            user = User.objects.create_user(cd['email'], cd['full_name'], cd['password'])
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password1')
+            first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
+            user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, password=password,)
             user.save()
             messages.success(request, 'you registered successfully', 'success')
-            return redirect('shop:home')
+            return redirect('book:home')
     else:
         form = UserRegistrationForm()
     return render(request, 'register.html', {'form': form})

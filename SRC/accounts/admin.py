@@ -27,7 +27,7 @@ class StaffAdmin(admin.ModelAdmin):
     fields = ('first_name', 'last_name', 'email')
 
     def get_queryset(self, request):
-        return User.objects.filter(is_superuser=True)
+        return User.objects.filter(is_admin=True)
 
 
 admin.site.register(Addresses)

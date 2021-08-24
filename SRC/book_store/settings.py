@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_bootstrap_icons',
+    # Add my tag
+    'crispy_forms',
+    'widget_tweaks',
     # my app
     'accounts',
     'books',
@@ -75,6 +78,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'book_store.wsgi.application'
 AUTH_USER_MODEL = 'accounts.User'
+CRISPY_TEMPLATE_PACK = 'uni_form'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

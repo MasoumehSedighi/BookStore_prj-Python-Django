@@ -1,16 +1,10 @@
 {% extends 'base.html' %}
-{% block title %}صفحه ورود{% endblock %}
+{% load crispy_forms_tags %}
 {% block content %}
+    <p>Login page</p>
     <form action="" method="post">
         {% csrf_token %}
-        {{ form }}
-        </br>
-        <input type="submit" class="btn btn-primary" value="ورود">
+        {{ form | crispy}}
+        <input type="submit" class="btn btn-primary" value="Login">
     </form>
-    <br/>
-        <div class="text-danger">
-        {% for message in messages %}
-        <h6 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h6>
-        {% endfor %}
-        </div>
 {% endblock %}
