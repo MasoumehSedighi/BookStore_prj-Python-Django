@@ -29,3 +29,4 @@ class DiscountCashAdmin(admin.ModelAdmin):
 class DiscountPercentAdmin(admin.ModelAdmin):
     list_display = ('percentage', 'valid_from', 'valid_to','active')
     list_filter = ('active', 'valid_from', 'valid_to')
+

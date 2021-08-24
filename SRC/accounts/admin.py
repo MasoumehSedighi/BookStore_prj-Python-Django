@@ -1,11 +1,19 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Customer, Addresses, Management, User, Staff
+from .forms import AddressForm
+from .models import Customer, Addresses, Management, User, Staff, UserProfile
+
+
+class AddressesInline(admin.TabularInline):
+    model = Addresses
+    raw_id_fields = ('user',)
 
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
+    inlines = (AddressesInline,)
+
     class Meta:
         model = User
         fields = '__all__'
@@ -30,4 +38,8 @@ class StaffAdmin(admin.ModelAdmin):
         return User.objects.filter(is_admin=True)
 
 
-admin.site.register(Addresses)
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'image')
+
+

@@ -1,7 +1,6 @@
-from importlib._common import _
 
 from django import forms
-from .models import User
+from .models import User, Addresses
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 
@@ -47,9 +46,15 @@ class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
     first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    address = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'password1', 'password2')
+        fields = ('email', 'first_name', 'last_name', 'address', 'password1', 'password2')
 
 
+class AddressForm(forms.Form):
+    city = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    address = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    default = forms.BooleanField(required=False)
