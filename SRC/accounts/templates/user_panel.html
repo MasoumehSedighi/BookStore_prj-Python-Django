@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}
+حساب کاربری
+{% endblock %}
+{% block content %}
+    <h1>سلام</h1>
+    <br/>
+    <br/>
+    <section class="container mx-5">
+    <div class="row justify_content_center">
+        <div class="col-9">
+            <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <br>
+            <input type="submit" value="ثبت">
+            </form>
+            </form>
+        </div>
+    </div>
+    </section>
+
+{% endblock %}
