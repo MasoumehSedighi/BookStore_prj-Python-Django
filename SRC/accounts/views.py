@@ -1,5 +1,7 @@
 
 from django.shortcuts import render, redirect
+
+from orders.models import OrderItem
 from .forms import UserLoginForm, UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -70,5 +72,10 @@ def user_update(request):
         profile_form = ProfileUpdateForm(instance=request.user.userprofile)
         context = {'user_form': user_form, 'profile_form': profile_form}
     return render(request, 'update.html', context)
+
+
+def history(request):
+    data = OrderItem.objects.filter(user_id=request.user.id)
+    return render(request, 'history.html',data)
 
 
