@@ -2,10 +2,9 @@ from .managers import UserManager
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.conf import settings
+from django.db.models.signals import post_save
 
 # Create your models here.
-
-
 class Addresses(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     address = models.CharField(max_length=200, blank=True, null=True)
@@ -68,7 +67,7 @@ class Staff(User):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='images/', default='images/abc.jpg',  null=True, verbose_name='عکس')
+    image = models.ImageField(blank=True, upload_to='images/users/')
     address = models.ManyToManyField(Addresses)
 
     def __str__(self):
@@ -76,3 +75,12 @@ class UserProfile(models.Model):
 
     def full_name(self):
         return self.user.first_name + '' + self.user.last_name
+
+
+def save_profile_user(sender, **kwargs):
+    if kwargs['created']:
+        profile_user = UserProfile(user=kwargs['instance'])
+        profile_user.save()
+
+
+post_save.connect(save_profile_user, sender=User)

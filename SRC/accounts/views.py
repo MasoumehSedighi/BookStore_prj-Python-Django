@@ -1,8 +1,9 @@
+
 from django.shortcuts import render, redirect
 from .forms import UserLoginForm, UserRegistrationForm, AddressForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import User, Addresses
+from .models import User, Addresses, UserProfile
 
 
 def user_login(request):
@@ -51,15 +52,5 @@ def user_register(request):
 
 
 def user_profile(request):
-    if request.method == 'POST':
-        form = AddressForm(request.POST)
-        if form.is_valid():
-            address = form.cleaned_data.get('address')
-            city = form.cleaned_data.get('city')
-            phone = form.cleaned_data.get('phone')
-            address = Addresses.objects.create(user=request.user, address=address, city=city, phone=phone)
-            address.save()
-            return redirect('accounts:profile')
-    else:
-        form = AddressForm()
-    return render(request, 'user_panel.html', {'form': form})
+    profile = UserProfile.objects.get(user_id=request.user.id)
+    return render(request, 'user_panel.html', {'profile': profile})
