@@ -1,6 +1,4 @@
-
 from django.shortcuts import render, redirect
-
 from orders.models import OrderItem
 from .forms import UserLoginForm, UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth import authenticate, login, logout
