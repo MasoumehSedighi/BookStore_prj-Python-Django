@@ -4,6 +4,8 @@ from .forms import UserLoginForm, UserRegistrationForm, UserUpdateForm, ProfileU
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import User, Addresses, UserProfile
+from django.contrib.auth import views as auth_views
+from django.urls import reverse_lazy
 
 
 def user_login(request):
@@ -75,5 +77,27 @@ def user_update(request):
 def history(request):
     data = OrderItem.objects.filter(user_id=request.user.id)
     return render(request, 'history.html',data)
+
+
+class ResetPassword(auth_views.PasswordResetView):
+    template_name = 'reset.html'
+    success_url = reverse_lazy('accounts:reset_done')
+    email_template_name = 'link.html'
+
+
+class DonePassword(auth_views.PasswordResetDoneView):
+    template_name = 'done.html'
+
+
+class ConfirmPassword(auth_views.PasswordResetConfirmView):
+    template_name = 'confirm.html'
+    success_url = reverse_lazy('accounts:complete')
+
+
+class Complete(auth_views.PasswordResetCompleteView):
+    template_name = 'complete.html'
+
+
+
 
 

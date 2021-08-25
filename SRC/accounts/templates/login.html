@@ -7,4 +7,7 @@
         {{ form | crispy}}
         <input type="submit" class="btn btn-primary" value="Login">
     </form>
+    <br/>
+    <a href="{% url 'accounts:reset' %}">رمز خود را فراموش کرده اید؟</a>
+
 {% endblock %}

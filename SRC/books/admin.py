@@ -14,7 +14,7 @@ class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'stock', 'categories')
     list_display_links = ['title']
     prepopulated_fields = {'slug': ('title',)}
-    change_list_template = "book/change.html"
+    change_list_template = "books/change.html"
 
     def categories(self, obj):
         return [cat.title for cat in obj.category.all()]

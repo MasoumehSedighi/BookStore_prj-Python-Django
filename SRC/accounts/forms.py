@@ -91,3 +91,6 @@ class ProfileUpdateForm(forms.ModelForm):
             'comment': TextInput(attrs={'class': 'input', 'placeholder': 'comment'}),
         }
 
+
+
+
