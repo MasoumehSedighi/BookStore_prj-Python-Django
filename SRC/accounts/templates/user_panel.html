@@ -3,10 +3,16 @@
 profile
 {% endblock %}
 {% block content %}
-    <h1> خوش آمدید{{ profile.user.first_name }}</h1>
-    <br/>
-    <br/>
-    <section class="container mx-5">
+    <section class="container my-5">
+        <div class="row">
+            <p ><span class=" h3 text-warning"> خوش آمدید</span> <span class=" h3 text-success">{{ profile.user.first_name }}</span> </p>
+            <br/>
+            <hr>
+            <div class="col-6">
+                <a class="text-decoration-none" href="{% url 'accounts:update' %}">بروزرسانی</a>
+            </div>
+        </div>
     </section>
 
 {% endblock %}
+

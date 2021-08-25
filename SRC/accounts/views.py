@@ -1,6 +1,6 @@
 
 from django.shortcuts import render, redirect
-from .forms import UserLoginForm, UserRegistrationForm, AddressForm
+from .forms import UserLoginForm, UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import User, Addresses, UserProfile
@@ -54,3 +54,21 @@ def user_register(request):
 def user_profile(request):
     profile = UserProfile.objects.get(user_id=request.user.id)
     return render(request, 'user_panel.html', {'profile': profile})
+
+
+def user_update(request):
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileUpdateForm(request.POST, instance=request.user.userprofile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'بروز رسانی با موفقیت انجام شد', 'success')
+            return redirect('accounts:profile')
+    else:
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=request.user.userprofile)
+        context = {'user_form': user_form, 'profile_form': profile_form}
+    return render(request, 'update.html', context)
+
+

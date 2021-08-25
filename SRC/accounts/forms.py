@@ -1,6 +1,7 @@
-
 from django import forms
-from .models import User, Addresses
+from django.forms import TextInput
+
+from .models import User, UserProfile, Addresses
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 
@@ -53,8 +54,40 @@ class UserRegistrationForm(UserCreationForm):
         fields = ('email', 'first_name', 'last_name', 'address', 'password1', 'password2')
 
 
-class AddressForm(forms.Form):
+class AddressForm(forms.ModelForm):
     city = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     address = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     default = forms.BooleanField(required=False)
+
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')
+        widgets = {
+            'first_name': TextInput(attrs={'class': 'input', 'placeholder': 'first_name'}),
+            'last_name': TextInput(attrs={'class': 'input', 'placeholder': 'last_name'}),
+        }
+
+
+class AddressUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Addresses
+        fields = ('phone', 'address', 'city')
+        widgets = {
+            'phone': TextInput(attrs={'class': 'input', 'placeholder': 'phone'}),
+            'address': TextInput(attrs={'class': 'input', 'placeholder': 'address'}),
+            'city': TextInput(attrs={'class': 'input', 'placeholder': 'city'}),
+
+        }
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('comment',)
+        widgets = {
+            'comment': TextInput(attrs={'class': 'input', 'placeholder': 'comment'}),
+        }
+
