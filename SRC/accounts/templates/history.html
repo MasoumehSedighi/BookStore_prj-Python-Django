@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <div class="cart mt-3 p-5">
+            {% for i in data %}
+                {% if i.order.payment == True %}
+                    <h3> سفارشات پرداخت شده</h3>
+                    <hr>
+                    <h2><span>نام کتاب</span>{{ i.book.title }} &nbsp <span>{{ i.order.get_total_price }}</span></h2>
+                    <img src="{{i.book.image.url}}" style="height:100px ; width:100px ">
+                {% else %}
+                    <h3> سفارشات پرداخت نشده</h3>
+                    <hr>
+                    <h2><span>نام کتاب</span>{{ i.book.title }} &nbsp <span>{{ i.order.get_total_price }}</span></h2>
+                    <img src="{{i.book.image.url}}" style="height:100px ; width:100px ">
+                {% endif %}
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
