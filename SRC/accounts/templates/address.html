@@ -14,8 +14,6 @@ profile
                 <th scope="col">تلفن تماس</th>
                 <th scope="col">ویرایش</th>
                 <th scope="col">حذف کردن</th>
-
-
             </tr>
             </thead>
             <tbody >
@@ -24,12 +22,15 @@ profile
                     <th scope="row">{{ forloop.counter }}</th>
                     <td>{{ addr.city }}</td>
                     <td>{{ addr.address }}</td>
-                    <td>{{addr.phonee}}</td>
-                    <td><a href="{% url 'accounts:update_address' address_id=addr.id %}">{% bs_icon 'pen' color='blue' size='1.2em'  %}</a></td>
+                    <td>{{addr.phone}}</td>
+                    <td><a href="{% url 'accounts:update_address' addr.pk %}">{% bs_icon 'pen' color='blue' size='1.2em'  %}</a></td>
                     <td><a href="#">{% bs_icon 'trash' color='red' size='1.2em'  %}</a></td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+        <br/>
+        <br/>
+        <a href="{% url 'accounts:address_new' %}">اضافه کردن آدرس</a>
     </section>
 {% endblock %}

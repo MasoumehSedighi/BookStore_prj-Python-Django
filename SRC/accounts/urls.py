@@ -11,7 +11,7 @@ urlpatterns = [
     path('profile/update/', views.user_update, name='update'),
     path('profile/history/', views.history_order, name='history'),
     path('profile/address/', views.address_profile, name='address_profile'),
-    path('profile/address/update/<int:address_id>/', views.update_address, name='update_address'),
+    path('profile/address/update/<int:pk>/', views.AddressUpdateView.as_view(), name='update_address'),
     path('reset/', views.ResetPassword.as_view(), name='reset'),
     path('reset/down/', views.DonePassword.as_view(), name='reset_done'),
     path('confirm/<uidb64>/<token>/', views.ConfirmPassword.as_view(), name='password_reset_confirm'),
@@ -21,4 +21,5 @@ urlpatterns = [
     path('profile/listbook/', views.BookListView.as_view(), name='staff_book_list'),
     path('profile/deletebook/<int:pk>', views.BookDeleteView.as_view(), name='book_delete'),
     path('profile/updateebook/<int:pk>', views.BookUpdateView.as_view(), name='staff_book_update'),
+    path('profile/address/new', views.user_add_address, name='address_new'),
 ]

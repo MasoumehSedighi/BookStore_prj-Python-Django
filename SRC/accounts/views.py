@@ -3,7 +3,8 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from books.models import Book, Category
 from orders.models import Order
-from .forms import UserLoginForm, UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, AddressUpdateForm
+from .forms import UserLoginForm, UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, AddressUpdateForm, \
+    AddressForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import User, Addresses, UserProfile
@@ -77,19 +78,26 @@ def user_update(request):
     return render(request, 'update.html', context)
 
 
-def update_address(request, address_id):
-    address = Addresses.objects.get(id=address_id)
+class AddressUpdateView(UpdateView):
+    model = Addresses
+    template_name = 'address_update.html'
+    fields = '__all__'
+    success_url = reverse_lazy('accounts:profile')
+
+
+def user_add_address(request):
     if request.method == 'POST':
-        print(address_id)
-        address_form = AddressUpdateForm(request.POST, instance=request.user.address)
-        if address_form.is_valid():
-            address_form.save()
-            messages.success(request, 'بروز رسانی با موفقیت انجام شد', 'success')
-            return redirect('accounts:address_profile')
+        form = AddressForm(request.POST)
+        if form.is_valid():
+            address = form.cleaned_data.get('address')
+            city = form.cleaned_data.get('city')
+            phone = form.cleaned_data.get('phone')
+            address = Addresses.objects.create(user=request.user, address=address, city=city, phone=phone)
+            address.save()
+            return redirect('accounts:profile')
     else:
-        address_form = AddressUpdateForm(request.POST, instance=request.user.address)
-        context = {'address_form': address_form}
-    return render(request, 'address_update.html', context)
+        form = AddressForm()
+    return render(request, 'address_new.html', {'form': form})
 
 
 def history_order(request):
@@ -133,7 +141,6 @@ class ConfirmPassword(auth_views.PasswordResetConfirmView):
 class Complete(auth_views.PasswordResetCompleteView):
     """این قسمت مربوط به فراموشی پسورد میباشد"""
     template_name = 'complete.html'
-
 
 
 class BookCreateView(CreateView):

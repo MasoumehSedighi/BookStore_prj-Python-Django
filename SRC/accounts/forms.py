@@ -55,7 +55,7 @@ class UserRegistrationForm(UserCreationForm):
         fields = ('email', 'first_name', 'last_name', 'address', 'password1', 'password2')
 
 
-class AddressForm(forms.ModelForm):
+class AddressForm(forms.Form):
     city = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     address = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
