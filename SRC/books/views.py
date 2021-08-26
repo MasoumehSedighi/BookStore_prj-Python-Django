@@ -24,7 +24,7 @@ class HomeListView(ListView):
 class BookListView(ListView):
     """این متد لیست نمام کتاب ها را نشان میدهد"""
     model = Book
-    template_name = 'books/book_list.html'
+    template_name = 'books/staff_book_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(BookListView, self).get_context_data(**kwargs)

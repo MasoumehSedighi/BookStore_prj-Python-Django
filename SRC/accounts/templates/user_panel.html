@@ -17,6 +17,10 @@ profile
                         <a class="text-decoration-none" href="{% url 'accounts:category_new' %}">اضافه کردن دسته بندی جدید</a>
                         <br/>
                         <br/>
+                        <a class="text-decoration-none" href="{% url 'accounts:staff_book_list' %}">
+                            لیست کامل کتاب ها (ویرایش- حذف)</a>
+                        <br/>
+                        <br/>
                         <a class="text-decoration-none" href="{% url 'admin:index' %}">داشبورد مدیریت</a>
                 {% elif user.is_staff == True and user.is_superuser == False %}
                     <h5>پنل کارمندان</h5>

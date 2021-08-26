@@ -18,4 +18,7 @@ urlpatterns = [
     path('confirm/done/', views.Complete.as_view(), name='complete'),
     path('profile/addbook/', views.BookCreateView.as_view(), name='book_new'),
     path('profile/addcategory/', views.CategoryCreateView.as_view(), name='category_new'),
+    path('profile/listbook/', views.BookListView.as_view(), name='staff_book_list'),
+    path('profile/deletebook/<int:pk>', views.BookDeleteView.as_view(), name='book_delete'),
+    path('profile/updateebook/<int:pk>', views.BookUpdateView.as_view(), name='staff_book_update'),
 ]

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from books.models import Book, Category
 from orders.models import Order
@@ -135,6 +135,7 @@ class Complete(auth_views.PasswordResetCompleteView):
     template_name = 'complete.html'
 
 
+
 class BookCreateView(CreateView):
     """اضافه کردن کتاب توسط کارمند و ادمین"""
     model = Book
@@ -148,4 +149,33 @@ class CategoryCreateView(CreateView):
     model = Category
     template_name = 'category_new.html'
     fields = '__all__'
+    success_url = reverse_lazy('accounts:profile')
+
+
+class BookDeleteView(DeleteView):
+    """حذف کردن کتاب توسط کارمند و ادمین"""
+    model = Book
+    template_name = 'book_delete.html'
+    fields = '__all__'
+
+    success_url = reverse_lazy('accounts:profile')
+
+
+class BookListView(ListView):
+    """این متد لیست نمام کتاب ها را به مدیر و کارمند نشان میدهد"""
+    model = Book
+    template_name = 'staff_book_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BookListView, self).get_context_data(**kwargs)
+        context['staff_book_list'] = Book.objects.all()
+        print(context)
+        return context
+
+
+class BookUpdateView(UpdateView):
+    model = Book
+    template_name = 'staff_book_update.html'
+    fields = '__all__'
+
     success_url = reverse_lazy('accounts:profile')
