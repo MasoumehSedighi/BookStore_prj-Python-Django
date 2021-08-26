@@ -85,6 +85,14 @@ class AddressUpdateView(UpdateView):
     success_url = reverse_lazy('accounts:profile')
 
 
+class AddressDeleteView(DeleteView):
+    """حذف کردن کتاب توسط کارمند و ادمین"""
+    model = Addresses
+    template_name = 'address_delete.html'
+    fields = '__all__'
+    success_url = reverse_lazy('accounts:address_profile')
+
+
 def user_add_address(request):
     if request.method == 'POST':
         form = AddressForm(request.POST)

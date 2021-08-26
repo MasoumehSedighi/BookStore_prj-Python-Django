@@ -24,7 +24,7 @@ profile
                     <td>{{ addr.address }}</td>
                     <td>{{addr.phone}}</td>
                     <td><a href="{% url 'accounts:update_address' addr.pk %}">{% bs_icon 'pen' color='blue' size='1.2em'  %}</a></td>
-                    <td><a href="#">{% bs_icon 'trash' color='red' size='1.2em'  %}</a></td>
+                    <td><a href="{% url 'accounts:address_delete' addr.pk %}">{% bs_icon 'trash' color='red' size='1.2em'  %}</a></td>
                 </tr>
             {% endfor %}
             </tbody>

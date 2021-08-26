@@ -12,6 +12,7 @@ urlpatterns = [
     path('profile/history/', views.history_order, name='history'),
     path('profile/address/', views.address_profile, name='address_profile'),
     path('profile/address/update/<int:pk>/', views.AddressUpdateView.as_view(), name='update_address'),
+    path('profile/address/delete/<int:pk>/', views.AddressDeleteView.as_view(), name='address_delete'),
     path('reset/', views.ResetPassword.as_view(), name='reset'),
     path('reset/down/', views.DonePassword.as_view(), name='reset_done'),
     path('confirm/<uidb64>/<token>/', views.ConfirmPassword.as_view(), name='password_reset_confirm'),
