@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load bootstrap_icons %}
+{% block title %}
+profile
+{% endblock %}
+{% block content %}
+    <section class="container my-5">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">ردیف</th>
+                <th scope="col">نام شهر</th>
+                <th scope="col">آدرس</th>
+                <th scope="col">تلفن تماس</th>
+                <th scope="col">ویرایش</th>
+                <th scope="col">حذف کردن</th>
+
+
+            </tr>
+            </thead>
+            <tbody >
+            {% for addr in addresses %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ addr.city }}</td>
+                    <td>{{ addr.address }}</td>
+                    <td>{{addr.phonee}}</td>
+                    <td><a href="{% url 'accounts:update_address' address_id=addr.id %}">{% bs_icon 'pen' color='blue' size='1.2em'  %}</a></td>
+                    <td><a href="#">{% bs_icon 'trash' color='red' size='1.2em'  %}</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}
