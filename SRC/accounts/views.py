@@ -1,6 +1,9 @@
-from django.shortcuts import render, redirect
-from orders.models import OrderItem
-from .forms import UserLoginForm, UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import CreateView
+
+from books.models import Book, Category
+from orders.models import Order
+from .forms import UserLoginForm, UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, AddressUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import User, Addresses, UserProfile
@@ -74,30 +77,75 @@ def user_update(request):
     return render(request, 'update.html', context)
 
 
-def history(request):
-    data = OrderItem.objects.filter(user_id=request.user.id)
-    return render(request, 'history.html',data)
+def update_address(request, address_id):
+    address = Addresses.objects.get(id=address_id)
+    if request.method == 'POST':
+        print(address_id)
+        address_form = AddressUpdateForm(request.POST, instance=request.user.address)
+        if address_form.is_valid():
+            address_form.save()
+            messages.success(request, 'بروز رسانی با موفقیت انجام شد', 'success')
+            return redirect('accounts:address_profile')
+    else:
+        address_form = AddressUpdateForm(request.POST, instance=request.user.address)
+        context = {'address_form': address_form}
+    return render(request, 'address_update.html', context)
+
+
+def history_order(request):
+    """تاریخچه سفارشات را نشان میدهد"""
+    current_user = request.user
+    orders = Order.objects.filter(user_id=current_user.id)
+    context = {
+               'orders': orders,
+               }
+    return render(request, 'history.html', context)
+
+
+def address_profile(request):
+    """آدرس هر کاربر را در پروفایلش نشان میدهد"""
+    current_user = request.user
+    addresses = Addresses.objects.filter(user_id=current_user.id)
+    context = {
+               'addresses': addresses,
+               }
+    return render(request, 'address.html', context)
 
 
 class ResetPassword(auth_views.PasswordResetView):
+    """این قسمت مربوط به فراموشی پسورد میباشد"""
     template_name = 'reset.html'
     success_url = reverse_lazy('accounts:reset_done')
     email_template_name = 'link.html'
 
 
 class DonePassword(auth_views.PasswordResetDoneView):
+    """این قسمت مربوط به فراموشی پسورد میباشد"""
     template_name = 'done.html'
 
 
 class ConfirmPassword(auth_views.PasswordResetConfirmView):
+    """این قسمت مربوط به فراموشی پسورد میباشد"""
     template_name = 'confirm.html'
     success_url = reverse_lazy('accounts:complete')
 
 
 class Complete(auth_views.PasswordResetCompleteView):
+    """این قسمت مربوط به فراموشی پسورد میباشد"""
     template_name = 'complete.html'
 
 
+class BookCreateView(CreateView):
+    """اضافه کردن کتاب توسط کارمند و ادمین"""
+    model = Book
+    template_name = 'book_new.html'
+    fields = '__all__'
+    success_url = reverse_lazy('accounts:profile')
 
 
-
+class CategoryCreateView(CreateView):
+    """اضافه کردن دسته بندی توسط کارمند و ادمین"""
+    model = Category
+    template_name = 'category_new.html'
+    fields = '__all__'
+    success_url = reverse_lazy('accounts:profile')

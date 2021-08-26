@@ -7,24 +7,28 @@ from books.models import Book
 
 
 class Coupon(models.Model):
-    code = models.CharField(unique=True, max_length=50)
-    valid_from = models.DateTimeField()
-    valid_to = models.DateTimeField()
-    discount = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
-    active = models.BooleanField(default=False)
+    code = models.CharField(unique=True, max_length=50, verbose_name='نام کد')
+    valid_from = models.DateTimeField(verbose_name='شروع')
+    valid_to = models.DateTimeField(verbose_name='انقضا')
+    discount = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)], verbose_name='درصد تخفیف')
+    active = models.BooleanField(default=False, verbose_name='فعال')
 
     def __str__(self):
         return self.code
 
+    class Meta:
+        verbose_name = 'کد تخفیف ویژه'
+        verbose_name_plural = 'کد تخفیف ویژه'
+
 
 class Order(models.Model):
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
-    created = models.DateTimeField(auto_now_add=True, null=True)
-    updated = models.DateTimeField(auto_now=True, null=True)
-    active = models.BooleanField(default=True)
-    payment = models.BooleanField(default=False)
-    discount = models.IntegerField(blank=True, null=True, default=None)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders', verbose_name='کاریر')
+    created = models.DateTimeField(auto_now_add=True, null=True, verbose_name='تاریخ ایجاد')
+    updated = models.DateTimeField(auto_now=True, null=True, verbose_name='تاریخ بروزرسانی')
+    active = models.BooleanField(default=True, verbose_name='فعال')
+    payment = models.BooleanField(default=False, verbose_name='پرداخت')
+    discount = models.IntegerField(blank=True, null=True, default=None, verbose_name='تخفیف ویژه')
 
     def __str__(self):
         return self.reference_number
@@ -40,13 +44,17 @@ class Order(models.Model):
             return int(total - discount_price)
         return total
 
+    class Meta:
+        verbose_name = 'سفارش'
+        verbose_name_plural = 'سفارشات'
+
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='order_items')
-    price = models.IntegerField()
-    quantity = models.PositiveSmallIntegerField(default=1)
-    discount = models.IntegerField(blank=True, null=True, default=None)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', verbose_name='سغارش')
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='order_items', verbose_name='کتاب')
+    price = models.IntegerField(verbose_name='قیمت')
+    quantity = models.PositiveSmallIntegerField(default=1, verbose_name='تعداد')
+    discount = models.IntegerField(blank=True, null=True, default=None, verbose_name='تخفیف موردی')
 
     def __str__(self):
         return str(self.id)
@@ -54,3 +62,6 @@ class OrderItem(models.Model):
     def get_cost(self):
         return self.price * self.quantity - self.discount
 
+    class Meta:
+        verbose_name = 'جزییات سغارش '
+        verbose_name_plural = 'جزییات سغارش'

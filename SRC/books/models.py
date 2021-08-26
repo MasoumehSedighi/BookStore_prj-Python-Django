@@ -20,25 +20,35 @@ class Category(models.Model):
 
 
 class DiscountCash(models.Model):
-    name = models.CharField(max_length=50, null=True)
-    amount = models.IntegerField(validators=[MinValueValidator(100), MaxValueValidator(800)])
-    valid_from = models.DateTimeField()
-    valid_to = models.DateTimeField()
-    active = models.BooleanField(default=False)
+    name = models.CharField(max_length=50, null=True, verbose_name='نام')
+    amount = models.IntegerField(validators=[MinValueValidator(100), MaxValueValidator(800)], verbose_name='مقدار')
+    valid_from = models.DateTimeField(verbose_name='شروع')
+    valid_to = models.DateTimeField(verbose_name='انقضا')
+    active = models.BooleanField(default=False, verbose_name='فعال')
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ['-valid_to']
+        verbose_name = 'تخفیف - نقدی'
+        verbose_name_plural = 'تخفیفات - نقدی'
 
 
 class DiscountPercent(models.Model):
-    name = models.CharField(max_length=50, null=True)
-    percentage = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
-    valid_from = models.DateTimeField()
-    valid_to = models.DateTimeField()
-    active = models.BooleanField(default=False)
+    name = models.CharField(max_length=50, null=True, verbose_name='نام')
+    percentage = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)], verbose_name='درصد')
+    valid_from = models.DateTimeField(verbose_name='شزوع')
+    valid_to = models.DateTimeField(verbose_name='انقضا')
+    active = models.BooleanField(default=False, verbose_name='فعال')
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ['-valid_to']
+        verbose_name = 'تخفیف - درصدی'
+        verbose_name_plural = 'تخفیفات - درصدی'
 
 
 class Book(models.Model):

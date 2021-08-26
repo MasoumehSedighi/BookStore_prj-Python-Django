@@ -14,7 +14,8 @@ class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'stock', 'categories')
     list_display_links = ['title']
     prepopulated_fields = {'slug': ('title',)}
-    change_list_template = "books/change.html"
+    search_fields = ('title',)
+    change_list_template = "change.html"
 
     def categories(self, obj):
         return [cat.title for cat in obj.category.all()]
@@ -22,12 +23,14 @@ class BookAdmin(admin.ModelAdmin):
 
 @admin.register(DiscountCash)
 class DiscountCashAdmin(admin.ModelAdmin):
-    list_display = ('amount', 'valid_from', 'valid_to','active')
+    list_display = ('amount', 'valid_from', 'valid_to', 'active')
     list_filter = ('active', 'valid_from', 'valid_to')
+    search_fields = ('name',)
 
 
 @admin.register(DiscountPercent)
 class DiscountPercentAdmin(admin.ModelAdmin):
-    list_display = ('percentage', 'valid_from', 'valid_to','active')
+    list_display = ('percentage', 'valid_from', 'valid_to', 'active')
     list_filter = ('active', 'valid_from', 'valid_to')
+    search_fields = ('name',)
 

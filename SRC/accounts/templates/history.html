@@ -2,17 +2,18 @@
 {% block content %}
     <div class="container">
         <div class="cart mt-3 p-5">
-            {% for i in data %}
-                {% if i.order.payment == True %}
-                    <h3> سفارشات پرداخت شده</h3>
+            {% for rs in orders %}
+                {% if rs.payment == True %}
+                    <h4 class="text-warning"> سفارشات پرداخت شده</h4>
                     <hr>
-                    <h2><span>نام کتاب</span>{{ i.book.title }} &nbsp <span>{{ i.order.get_total_price }}</span></h2>
-                    <img src="{{i.book.image.url}}" style="height:100px ; width:100px ">
+                    <h6><span>شماره سفارش :</span><span class="text-success">{{ rs.reference_number }}</span> &nbsp
+                        <span> قیمت : </span> <span class="text-success">{{ rs.get_total_price }}</span></h6>
                 {% else %}
-                    <h3> سفارشات پرداخت نشده</h3>
+                    <br/>
+                    <h4 class="text-danger"> سفارشات پرداخت نشده</h4>
                     <hr>
-                    <h2><span>نام کتاب</span>{{ i.book.title }} &nbsp <span>{{ i.order.get_total_price }}</span></h2>
-                    <img src="{{i.book.image.url}}" style="height:100px ; width:100px ">
+                    <h6><span>شماره سفارش :</span><a><span class="text-success">{{ rs.reference_number }}</span><a> &nbsp
+                        <span> قیمت : </span> <span class="text-success">{{ rs.get_total_price }}</span></h6>
                 {% endif %}
                 <hr>
             {% endfor %}

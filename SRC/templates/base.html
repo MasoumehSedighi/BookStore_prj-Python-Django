@@ -33,13 +33,23 @@ initial-scale=1, shrink-to-fit=no">
                     <!--  در قسمت نوبار با توجه به اینکه کاربر لاگین است یا کاربر مهمان باشد
                     لینک ورود و ثبت نام و خروج را نشان میدهد-->
                     {% if request.user.is_authenticated %}
-                    <li class="nav-item">
+                        <li class="nav-item">
 
-                     <a class="nav-item nav-link active" href="{% url 'accounts:logout' %}">خروج</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-item nav-link active" href="{% url 'accounts:profile' %}">حساب کاربری</a>
-                    </li>
+                         <a class="nav-item nav-link active" href="{% url 'accounts:logout' %}">خروج</a>
+                        </li>
+                            {% if user.is_staff == True and user.is_superuser == True %}
+                                <li class="nav-item">
+                                    <a class="nav-item nav-link active" href="{% url 'accounts:profile' %}">پنل مدیریت</a>
+                                </li>
+                            {% elif user.is_staff == True and user.is_superuser == False %}
+                                <li class="nav-item">
+                                    <a class="nav-item nav-link active" href="{% url 'accounts:profile' %}">پنل کارمند</a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-item nav-link active" href="{% url 'accounts:profile' %}">حساب کاربری</a>
+                                </li>
+                            {% endif %}
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'accounts:register' %}">ثبت نام</a>

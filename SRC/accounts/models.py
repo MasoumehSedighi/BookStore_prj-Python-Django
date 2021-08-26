@@ -2,31 +2,31 @@ from .managers import UserManager
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.conf import settings
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, m2m_changed
 
 
 # Create your models here.
 class Addresses(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    address = models.CharField(max_length=200, blank=True, null=True)
-    city = models.CharField(max_length=40, blank=True, null=True)
-    phone = models.CharField(max_length=24, blank=True, null=True)
-    default = models.BooleanField(default=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='کاربر')
+    address = models.CharField(max_length=200, blank=True, null=True, verbose_name='آدرس')
+    city = models.CharField(max_length=40, blank=True, null=True, verbose_name='شهر')
+    phone = models.CharField(max_length=24, blank=True, null=True, verbose_name='تلفن')
+    default = models.BooleanField(default=False, verbose_name='پیش فرض')
 
     def __str__(self):
         return f'{self.user}'
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    first_name = models.CharField(max_length=40)
-    last_name = models.CharField(max_length=20)
-    address = models.CharField(max_length=200, blank=True, null=True)
-    city = models.CharField(max_length=40, blank=True, null=True)
-    phone = models.CharField(max_length=24, blank=True, null=True)
-    email = models.EmailField(unique=True)
-    is_staff = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    first_name = models.CharField(max_length=40, verbose_name='نام')
+    last_name = models.CharField(max_length=20, verbose_name='نام خانوادگی')
+    address = models.CharField(max_length=200, blank=True, null=True, verbose_name='آدرس')
+    city = models.CharField(max_length=40, blank=True, null=True, verbose_name='شهر')
+    phone = models.CharField(max_length=24, blank=True, null=True, verbose_name='تلفن')
+    email = models.EmailField(unique=True, verbose_name='ایمیل')
+    is_staff = models.BooleanField(default=False, verbose_name='کارمند')
+    is_admin = models.BooleanField(default=False, verbose_name='ادمین')
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
@@ -68,15 +68,19 @@ class Staff(User):
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    image = models.ImageField(blank=True, upload_to='images/users/')
-    comment = models.CharField(max_length=200, blank=True, null=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='کاربر')
+    image = models.ImageField(blank=True, upload_to='images/users/', verbose_name='عکس پروفایل')
+    comment = models.CharField(max_length=200, blank=True, null=True, verbose_name='نظرات')
 
     def __str__(self):
         return self.user.first_name
 
     def full_name(self):
         return self.user.first_name + '' + self.user.last_name
+
+    class Meta:
+        verbose_name = 'پروفایل'
+        verbose_name_plural = 'پروفایل ها'
 
 
 def save_profile_user(sender, **kwargs):

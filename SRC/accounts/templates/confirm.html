@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
-    <form action="" method="post">
-    {% if validlink %}
-    {% csrf_token %}
-    {{ form }}
-    <button type="submit"> تفییر پسورد</button>
-    </form>
-    {% endif %}
+    <div class="container my-5">
+        <form action="" method="post">
+        {% if validlink %}
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit"> تفییر پسورد</button>
+        </form>
+        {% endif %}
+    </div>
 {% endblock %}

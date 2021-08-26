@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import TextInput
 
+from books.models import Book
 from .models import User, UserProfile, Addresses
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
@@ -90,7 +91,5 @@ class ProfileUpdateForm(forms.ModelForm):
         widgets = {
             'comment': TextInput(attrs={'class': 'input', 'placeholder': 'comment'}),
         }
-
-
 
 

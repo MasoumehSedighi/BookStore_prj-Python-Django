@@ -7,11 +7,33 @@ profile
         <div class="row">
             <p ><span class=" h3 text-warning"> خوش آمدید</span> <span class=" h3 text-success">{{ profile.user.first_name }}</span> </p>
             <br/>
-            <hr>
             <div class="col-6">
-                <a class="text-decoration-none" href="{% url 'accounts:update' %}">بروزرسانی</a>
-                <br/>
-                <a class="text-decoration-none" href="{% url 'accounts:history' %}">تاریخچه سفارشات</a>
+                {% if user.is_staff == True and user.is_superuser == True %}
+                    <h5>پنل مدیریت</h5>
+                    <hr>
+                        <a class="text-decoration-none" href="{% url 'accounts:book_new' %}">اضافه کردن کتاب جدید</a>
+                        <br/>
+                        <br/>
+                        <a class="text-decoration-none" href="{% url 'accounts:category_new' %}">اضافه کردن دسته بندی جدید</a>
+                        <br/>
+                        <br/>
+                        <a class="text-decoration-none" href="{% url 'admin:index' %}">داشبورد مدیریت</a>
+                {% elif user.is_staff == True and user.is_superuser == False %}
+                    <h5>پنل کارمندان</h5>
+                    <hr>
+                        <a class="text-decoration-none" href="{% url 'accounts:book_new' %}">اضافه کردن کتاب جدید</a>
+                        <br/>
+                        <br/>
+                        <a class="text-decoration-none" href="{% url 'accounts:category_new' %}">اضافه کردن دسته بندی جدید</a>
+                {% else %}
+                        <a class="text-decoration-none" href="{% url 'accounts:update' %}">بروزرسانی</a>
+                        <br/>
+                        <br/>
+                        <a class="text-decoration-none" href="{% url 'accounts:history' %}">تاریخچه سفارشات</a>
+                        <br/>
+                        <br/>
+                        <a class="text-decoration-none" href="{% url 'accounts:address_profile' %}">مشاهده آدرس ها</a>
+                {% endif %}
             </div>
         </div>
     </section>

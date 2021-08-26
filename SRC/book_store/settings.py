@@ -42,10 +42,10 @@ INSTALLED_APPS = [
     'crispy_forms',
     'widget_tweaks',
     # my app
-    'accounts',
-    'books',
-    'orders',
-    'cart',
+    'accounts.apps.CustomerConfig',
+    'books.apps.BookConfig',
+    'orders.apps.OrdersConfig',
+    'cart.apps.CartConfig',
 ]
 
 MIDDLEWARE = [
@@ -119,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'fa-ir'
 
-TIME_ZONE = 'Asia/tehran'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
