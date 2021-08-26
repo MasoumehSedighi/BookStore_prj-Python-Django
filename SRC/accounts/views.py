@@ -49,6 +49,7 @@ def user_register(request):
             user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, password=password,)
             address = Addresses.objects.create(user=user, address=address, default=True)
             address.save()
+            user.is_active = False
             user.save()
             messages.success(request, 'you registered successfully', 'success')
             return redirect('book:home')
