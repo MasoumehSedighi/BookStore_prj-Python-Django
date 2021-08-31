@@ -164,7 +164,7 @@ class AddressDeleteView(LoginRequiredMixin, DeleteView):
         if not object_addr.default:
             object_addr.delete()
         else:
-            messages.success(request, 'خطارخ داد', 'success')
+            messages.success(request, 'کاربر گرامی امکان حذف آدرس پیش فرض نمیباشد', 'success')
         return redirect('accounts:address_profile')
 
 
