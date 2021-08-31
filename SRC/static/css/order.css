@@ -42,8 +42,8 @@
 .shipping-label:hover {
   font-size: 16px;
   font-weight: normal;
-  background-color: #428bca;
-  color: white;
+  background-color: white;
+  color: black;
   cursor: pointer;
 
 }
@@ -51,16 +51,8 @@
 .shipping-label-selected {
   font-size: 16px;
   font-weight: normal;
-  background-color: #428bca;
-  color: white;
+  background-color: white;
+  color: black;
   cursor: pointer;
 }
 
-
-
-
-@media(min-width: 1200px) {
-  .total {
-    position: fixed;
-  }
-}

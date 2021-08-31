@@ -1,4 +1,5 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django.contrib.auth.decorators import login_required
@@ -10,7 +11,9 @@ from six import text_type
 
 from books.models import Book, Category
 from orders.models import Order
-from .forms import UserLoginForm, UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, AddressForm
+
+from .forms import UserLoginForm, UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, AddressForm, \
+    AddressUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import User, Addresses, UserProfile, UserDefaultAddress
@@ -129,8 +132,23 @@ class AddressUpdateView(LoginRequiredMixin, UpdateView):
     """بروز رسانی آدرس توسط کاربر"""
     model = Addresses
     template_name = 'address_update.html'
-    fields = '__all__'
-    success_url = reverse_lazy('accounts:profile')
+    form_class = AddressUpdateForm
+    success_url = reverse_lazy('accounts:address_profile')
+
+    def post(self, request, *args, **kwargs):
+        address = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        if form.is_valid():
+            default = form.cleaned_data['default']
+            """تغییر default سایر آدرس ها"""
+            if default:
+                other_instance = Addresses.objects.filter(user=request.user).exclude(id=address.id)
+                print(other_instance)
+                for addr in other_instance:
+                    addr.default = False
+                    addr.save()
+            return super(AddressUpdateView, self).post(request, *args, **kwargs)
 
 
 class AddressDeleteView(LoginRequiredMixin, DeleteView):
@@ -139,6 +157,15 @@ class AddressDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'address_delete.html'
     fields = '__all__'
     success_url = reverse_lazy('accounts:address_profile')
+
+    def delete(self, request, *args, **kwargs):
+        """عدم امکان حذف آدرس پیش فرض"""
+        object_addr = self.get_object()
+        if not object_addr.default:
+            object_addr.delete()
+        else:
+            messages.success(request, 'خطارخ داد', 'success')
+        return redirect('accounts:address_profile')
 
 
 @login_required
@@ -220,7 +247,7 @@ class CategoryCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('accounts:profile')
 
 
-class BookDeleteView(LoginRequiredMixin,DeleteView):
+class BookDeleteView(LoginRequiredMixin, DeleteView):
     """حذف کردن کتاب توسط کارمند و ادمین"""
     model = Book
     template_name = 'book_delete.html'
@@ -246,7 +273,6 @@ class BookUpdateView(LoginRequiredMixin, UpdateView):
     model = Book
     template_name = 'staff_book_update.html'
     fields = '__all__'
-
     success_url = reverse_lazy('accounts:profile')
 
 

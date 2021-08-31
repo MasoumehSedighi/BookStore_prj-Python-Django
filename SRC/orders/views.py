@@ -16,7 +16,6 @@ from orders.models import Order, OrderItem, Coupon
 @login_required
 def detail(request, order_id):
 
-    cart = Cart(request)
     order = get_object_or_404(Order, id=order_id)
     coupon_form = CouponForm()
     """start new address"""
@@ -72,7 +71,7 @@ def order_create(request):
 
 
 def add_address(request, order_id):
-    address_form =  AddressOrderForm(request.POST)
+    address_form = AddressOrderForm(request.POST)
     if address_form.is_valid():
         address = address_form.cleaned_data.get('address')
         city = address_form.cleaned_data.get('city')
@@ -96,7 +95,6 @@ def coupon_apply(request, order_id):
         except Coupon.DoesNotExist:
             messages.error(request, 'کد تخفیف نامعتبر میباشد ', 'danger')
             return redirect('orders:detail', order_id)
-
 
 
 def complete_order(request, order_id):

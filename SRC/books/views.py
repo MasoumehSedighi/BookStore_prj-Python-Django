@@ -66,7 +66,6 @@ class BookDetailView(FormMixin, DetailView):
     """جزییات هر کتاب را نشان میدهد"""
     model = Book
     template_name = 'books/book_detail.html'
-
     form_class = CartAddForm
 
     def get_context_data(self, **kwargs):

@@ -48,7 +48,7 @@ $(".shipping-label").click(function(){
             <!-- new address order -->
             <form method='POST' action="" id="payment-form"> {% csrf_token %}
                 {% if shipping_addresses  %}
-                    <h3>آدرس فعلی</h3>
+                    <h3>آدرس کاربری</h3>
 
                     {% for address in shipping_addresses %}
 
@@ -67,7 +67,7 @@ $(".shipping-label").click(function(){
                     {% endif %}
                         {% if  current_addresses  %}
 
-                        <h3>سایر آدرس </h3>
+                        <h3>آدرس ارسال سفارش</h3>
 
                         {% for address in current_addresses %}
 

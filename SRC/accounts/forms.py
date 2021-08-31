@@ -67,19 +67,21 @@ class UserUpdateForm(forms.ModelForm):
         model = User
         fields = ('first_name', 'last_name')
         widgets = {
-            'first_name': TextInput(attrs={'class': 'input', 'placeholder': 'first_name'}),
-            'last_name': TextInput(attrs={'class': 'input', 'placeholder': 'last_name'}),
+            'first_name': TextInput(attrs={'class': 'input', 'placeholder': 'نام'}),
+            'last_name': TextInput(attrs={'class': 'input', 'placeholder': 'نام خانوادگی'}),
         }
 
 
 class AddressUpdateForm(forms.ModelForm):
     class Meta:
         model = Addresses
-        fields = ('phone', 'address', 'city')
+        fields = ('phone', 'address', 'city', 'default')
         widgets = {
             'phone': TextInput(attrs={'class': 'input', 'placeholder': 'phone'}),
             'address': TextInput(attrs={'class': 'input', 'placeholder': 'address'}),
             'city': TextInput(attrs={'class': 'input', 'placeholder': 'city'}),
+            'default': CheckboxInput(attrs={'class': 'checkbox', 'name': 'default', 'value': '{{ address.id }}',
+                                            'placeholder': 'default'}),
 
         }
 

@@ -1,7 +1,4 @@
 from django import forms
-from django.forms import TextInput, BooleanField
-
-from accounts.models import Addresses
 
 
 class CouponForm(forms.Form):
