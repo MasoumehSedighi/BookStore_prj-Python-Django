@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import TextInput
+from django.forms import TextInput, CheckboxInput
 
 from books.models import Book
 from .models import User, UserProfile, Addresses
@@ -91,5 +91,6 @@ class ProfileUpdateForm(forms.ModelForm):
         widgets = {
             'comment': TextInput(attrs={'class': 'input', 'placeholder': 'comment'}),
         }
+
 
 

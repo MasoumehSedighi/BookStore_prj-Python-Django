@@ -1,21 +1,35 @@
+<!-- این صفحه اطلاعات پروفایل مشتری را بروز رسانی میکند-->
 {% extends 'base.html' %}
+{% load bootstrap_icons %}
+{% load crispy_forms_tags %}
+{% block page_style %}
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.rtl.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% endblock %}
 {% block title %}ویرایش اطلاعات{% endblock %}
 {% block content %}
-    <section class="container my-5">
-    <h3>بروز رسانی</h3>
-        <hr>
-    <div class="row justify-content-center">
-        <div class="col_9">
-            <form action="" method='post'>
-                {% csrf_token %}
-                {{ user_form.as_p }}
-                <br/>
-                {{ profile_form }}
-                <br/>
-                <br />
-                <button class="btn btn-success" type="submit">بروز رسانی</button>
-            </form>
+    {% if user.is_staff == False or user.is_superuser == False %}
+        <section class="container py-5">
+        <h3>بروز رسانی</h3>
+            <hr>
+        <div class="row  ">
+            <div class="col-6">
+                <form action="" method='post' >
+                    {% csrf_token %}
+                    {{ user_form|crispy}}
+                    <br/>
+                    {{ profile_form|crispy }}
+                    <br/>
+                    <br />
+                    <button class="btn btn-success" type="submit">بروز رسانی</button>
+                </form>
+            </div>
         </div>
-    </div>
-    </section>
+        </section>
+    {% else %}
+        <div class="container py-5">
+            {% bs_icon 'exclamation-triangle-fill' color='red' size='3rem'  %}
+            <br/>
+            <h2 class="text-danger"> شما مجوز دسترسی به این صفحه را ندارید</h2>
+        </div>
+    {% endif %}
 {% endblock %}

@@ -1,13 +1,50 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
+{% block page_style %}
+     <link rel="stylesheet" href={% static 'css/login.css' %}>
+{% endblock %}
 {% block content %}
-    <p>Login page</p>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form | crispy}}
-        <input type="submit" class="btn btn-primary" value="Login">
-    </form>
-    <br/>
-    <a href="{% url 'accounts:reset' %}">رمز خود را فراموش کرده اید؟</a>
+    <section  class="py-2 px-3">
+        {% if messages %}
+            <div class="alert alert-dismissible alert-danger w-25 h-25 ">
+                {% for message in messages %}
+                <h6 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h6>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="py-5 container">
+        <div class="row  " >
+            <div class="col-9 px-5 bg_img">
+                <div class="row justify-content-center bg_form">
+                    <div class="col-6">
+                        <form action="" method="post" class="text-black" >
+                            {% csrf_token %}
+                            <br/>
+                            <br/>
+                            <p>ایمیل : </p>
+                            <p>{{ form.email}}</p>
+                            <p>پسورد :</p>
+                            <p> {{ form.password }}</p>
+                            <br/>
+                            <br/>
+                            <input type="submit" class="btn btn-warning" value="ورود">
+                        </form>
+                        <br/>
+                        <a class="fw-bold text-primary" href="{% url 'accounts:reset' %}">رمز خود را فراموش کرده اید؟</a>
+                        <br/>
+                        <br/>
+                        <br/>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
 
 {% endblock %}

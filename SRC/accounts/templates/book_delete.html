@@ -1,17 +1,25 @@
+{% load bootstrap_icons %}
 {% block content %}
-<div class="site-section">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <hr />
-                <h4>حذف کردن کتاب </h4>
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form }}
-                    <button type='submit' class='btn btn-primary'>Submit</button>
-                </form>
+        {% if user.is_staff == True or user.is_superuser == True %}
+            <div class="site-section">
+                <div class="container py-3">
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <h4>حذف کردن کتاب </h4>
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {{ form }}
+                                <button type='submit' class='btn btn-primary'>Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
+       {% else %}
+            <div class="container py-5">
+                {% bs_icon 'exclamation-triangle-fill' color='red' size='3rem'  %}
+                <br/>
+                <h2 class="text-danger"> شما مجوز دسترسی به این صفحه را ندارید</h2>
+            </div>
+        {% endif %}
 {% endblock content %}

@@ -1,43 +1,68 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block page_style %}
-    <link rel="stylesheet" href={% static 'css/home.css' %}>
+     <link rel="stylesheet" href={% static 'css/home.css' %}>
 {% endblock %}
+{% load static %}
 {% block title %}
     فروشگاه کتاب
 {% endblock title %}
 {% block content %}
-        <div class="row my-5">
-            <div>
-                {% for book in book_list %}
+    <section class="py-2 px-3">
+        {% if messages %}
+            <div class="w-25 h-25 ">
+                {% for message in messages %}
+                <h6 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h6>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+    <br/>
+    <h4 class="px-5 text-primary"> کتاب های پرفروش </h4>
+    <section class=" py-5 px-3">
+        <div class="row  px-5">
+            <div class="col-9">
+                {% for book in top_sold %}
                     <div class="card " style="width:16rem; display:inline-block">
-                        <img src="{{ book.image.url }} " class="py-3 w-50 h-50  rounded mx-auto d-block" alt="showcase">
+                        <img src="{{ book.image.url }} "  class="py-3 rounded mx-auto d-block" alt="showcase"
+                             style=" width: 150px; height: 250px;">
                         <div class="card-body text-center">
                             <a href="{{ book.get_absolute_url }}" class="card-title text-decoration-none">{{ book.title }}</a>
                         </div>
                     </div>
+
                 {% endfor %}
-                <br />
-                <!-- تقسیم بندی صفحات لیست کتاب ها  -->
-                <div class="pagination">
-                    <span class="step-links">
-                        {% if page_obj.has_previous %}
-                            <a href="?page=1">&laquo; first</a>
-                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                        {% endif %}
 
-                        <span class="current">
-                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                        </span>
-
-                        {% if page_obj.has_next %}
-                            <a href="?page={{ page_obj.next_page_number }}">next</a>
-                            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                        {% endif %}
-                    </span>
+            </div>
+            <div class="col-3 bg-black">
+                <div>
+                    {% for cat in cat_list %}
+                    <p>{{ cat.title }}</p>
+                    {% endfor %}
                 </div>
             </div>
         </div>
-        <br/>
+    </section>
+                    <!-- تقسیم بندی صفحات لیست کتاب ها  -->
+{#                    <div class="pagination px-5">#}
+{#                        <span class="step-links">#}
+{#                            {% if page_obj.has_previous %}#}
+{#                                <a href="?page=1">&laquo; first</a>#}
+{#                                <a href="?page={{ page_obj.previous_page_number }}">previous</a>#}
+{#                            {% endif %}#}
+{##}
+{#                            <span class="current">#}
+{#                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.#}
+{#                            </span>#}
+{##}
+{#                            {% if page_obj.has_next %}#}
+{#                                <a href="?page={{ page_obj.next_page_number }}">next</a>#}
+{#                                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>#}
+{#                            {% endif %}#}
+{#                        </span>#}
+{#                    </div>#}
+{#            </div>#}
+
+
+
 {% endblock content %}

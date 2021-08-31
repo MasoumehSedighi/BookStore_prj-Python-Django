@@ -3,8 +3,8 @@ from django.db import models
 from django.urls import reverse
 from decimal import Decimal
 
-
 # Create your models here.
+
 
 class Category(models.Model):
     """ مدلی است که شامل گروه های کتابها میباشد و دو فیلد title برای نام دسته و slug برای آدرس لینک دارد """
@@ -66,12 +66,13 @@ class Book(models.Model):
     stock = models.PositiveIntegerField(verbose_name='موجودی')
     image = models.ImageField(upload_to='images/', default='images/abc.jpg',  null=True, verbose_name='عکس')
     slug = models.SlugField(max_length=100, unique=True, allow_unicode=True, verbose_name='آدرس لینک',)
-    label = models.CharField(choices=LABEL_CHOICES, max_length=6, null=True, verbose_name='برچسب')
+    label = models.CharField(choices=LABEL_CHOICES, max_length=6, null=True, default='None', verbose_name='برچسب')
     price = models.BigIntegerField(null=True, verbose_name='قیمت')
     cash_discount = models.ForeignKey(DiscountCash, on_delete=models.CASCADE, null=True,
                                       default=False, blank=True, related_name='cash', verbose_name='تخفیف ریالی',)
     pers_discount = models.ForeignKey(DiscountPercent, on_delete=models.CASCADE, null=True,
                                       default=False, blank=True, related_name='percent', verbose_name='تخفیف درصدی',)
+    sold = models.PositiveIntegerField(default=0, verbose_name='فروخته شده')
 
     class Meta:
         ordering = ['-created']

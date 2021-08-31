@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% block title %}Search{% endblock title %}
 {% block content %}
-    <div class="conainer my-3">
+    <div class=" py-5 px-3 container">
         <h1>نتیجه جستجو</h1>
     <hr>
         {% for book in book_list %}
                 <div>
-                    <h3><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></h3>
+                    <h3 ><a class="text-decoration-none" href="{{ book.get_absolute_url }}">{{ book.title }}</a></h3>
+                    <br/>
                     <p><span>نام نویسنده : </span>{{ book.author}} </p>
                     <p><span>قیمت : </span>{{ book.price }}</p>
                 </div>

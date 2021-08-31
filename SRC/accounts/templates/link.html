@@ -1,2 +1,2 @@
-با سلام- لینک مربوط به تغییر پسورد را کلینک کنید
-{{ protocol }}://{{ domain }}{% url 'accounts:password_reset_confirm'  uidb64=uid token=token%}
+با سلام- لینک مربوط به تغییر پسورد را کلینک کنید{{ user.email }}
+{{ protocol }}://{{ domain }}{% url 'accounts:password_reset_confirm'  uidb64=uid token=token %}

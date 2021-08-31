@@ -19,7 +19,7 @@ initial-scale=1, shrink-to-fit=no">
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Fifth navbar example">
         <div class="container-fluid">
-            <a class="navbar-brand py-3 px-3" href="#"><img src="../static/image/logo.jpg" style="width: 2.5rem; height: 2.5rem"></a>
+            <a class="navbar-brand py-3 px-3" href="#">{% bs_icon 'book-half' color='orange' size='3rem'  %}</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample05"
                     aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -69,16 +69,63 @@ initial-scale=1, shrink-to-fit=no">
                 </ul>
                 <form class="row mx-5" id="search_form" action="{% url 'book:search_results' %}" method="get">
                     <input name="q" id="searchbar" class="col-8 " type="text" placeholder="نام کتاب/ نام نویسنده" >
-                    <input type="submit" value="جستجو" class="col-4 btn btn-secondary py-2">
+                    <input type="submit" value="جستجو" class="col-4 btn btn-warning py-2">
                 </form>
             </div>
         </div>
     </nav>
-    <main class="container">
-        {% block content %}
-        {% endblock content %}
+    <main id="page-container" class="img_content">
+        <div id="content-wrap">
+            {% block content %}
+            {% endblock content %}
+        </div>
+        <footer  id="footer">
+            <div class="">
+            <div class="bg-dark text-center text-white">
+            <div class="container p-4 pb-0">
+            <section class="mb-4">
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+            >{% bs_icon 'facebook' color='orange' size='1.5em'  %}</a>
+
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button">
+            {% bs_icon 'twitter' color='orange' size='1.5em'  %}</a>
+
+            <!-- Google -->
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+            >{% bs_icon 'google' color='orange' size='1.5em'  %}</a>
+
+            <!-- Instagram -->
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+            >{% bs_icon 'instagram' color='orange' size='1.5em'  %}</a>
+
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+            >{% bs_icon 'linkedin' color='orange' size='1.5em'  %}</a>
+
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+            >{% bs_icon 'github' color='orange' size='1.5em'  %}</a>
+            </section>
+            </div>
+            <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            <a class="text-white text-decoration-none" href="#">سایت فروشگاه کتاب_ شهریور 1400</a>
+           <br/>
+            </div>
+            </div>
+
+            </div>
+
+        </footer>
     </main>
+
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
     <!-- JavaScript -->
-    <script src="jquery-3.5.1.min.js"></script>
+    <script>
+
+        $(document).ready(function(){
+            {% block jquery %}{% endblock%}
+        });
+
+	</script>
+   <!-- <script src="jquery-3.5.1.min.js"></script> -->
 </body>
+
 </html>

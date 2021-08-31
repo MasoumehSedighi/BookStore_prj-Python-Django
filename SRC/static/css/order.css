@@ -1,0 +1,66 @@
+.radio-label {
+  font-size: 16px;
+  font-weight: normal;
+  padding: 4px 30px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.radio-label input[type=radio] {
+  display: none;
+}
+
+.radio-label:hover {
+  font-size: 15px;
+  font-weight: normal;
+  background-color: #428bca;
+  color: white;
+  cursor: pointer;
+
+}
+
+.radio-label-selected {
+  font-size: 16px;
+  font-weight: normal;
+  background-color: #428bca;
+  color: white;
+  cursor: pointer;
+}
+
+.shipping-label {
+  font-size: 16px;
+  font-weight: normal;
+  padding: 4px 30px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.shipping-label input[type=radio] {
+  display: none;
+}
+
+.shipping-label:hover {
+  font-size: 16px;
+  font-weight: normal;
+  background-color: #428bca;
+  color: white;
+  cursor: pointer;
+
+}
+
+.shipping-label-selected {
+  font-size: 16px;
+  font-weight: normal;
+  background-color: #428bca;
+  color: white;
+  cursor: pointer;
+}
+
+
+
+
+@media(min-width: 1200px) {
+  .total {
+    position: fixed;
+  }
+}

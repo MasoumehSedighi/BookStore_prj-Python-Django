@@ -3,18 +3,50 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.views.decorators.http import require_POST
+
+
+from accounts.models import Addresses
 from books.models import Book
 from cart.cart import Cart
-from orders.forms import CouponForm
+from orders.forms import CouponForm, AddressOrderForm
 from orders.models import Order, OrderItem, Coupon
 
 
 # Create your views here.
 @login_required
 def detail(request, order_id):
+
+    cart = Cart(request)
     order = get_object_or_404(Order, id=order_id)
-    form = CouponForm()
-    return render(request, 'order.html', {'order': order, 'form': form})
+    coupon_form = CouponForm()
+    """start new address"""
+    address_form = AddressOrderForm()
+    current_addresses = Addresses.objects.filter(user=request.user)
+    shipping_addresses = Addresses.objects.get_shipping_addresses(user=request.user)
+    print(current_addresses)
+    print(shipping_addresses)
+    if request.method == "POST":
+        shipping_a = request.POST['shipping_address']
+        shipping_address_instance = Addresses.objects.get(id=shipping_a)
+        order.shipping_address = shipping_address_instance
+        order.active = False
+        order.payment = True
+        order.updated = timezone.now()
+        order.save()
+        return redirect('orders:complete_order', order_id)
+
+    context = {
+        'coupon_form': coupon_form,
+        'order': order,
+        "address_form": address_form,
+        "order.id": order.id,
+        "current_addresses": current_addresses,
+        "shipping_addresses": shipping_addresses,
+
+    }
+    """finish new address"""
+
+    return render(request, 'order.html', context)
 
 
 @login_required
@@ -29,11 +61,25 @@ def order_create(request):
         book = Book.objects.get(id=order_item.book.id)
         if book.stock >= order_item.quantity:
             book.stock = book.stock - order_item.quantity
+            book.sold = book.sold + order_item.quantity
             book.save()
+            order.save()
+
         else:
             messages.error(request, f'"{book.title} موجودی کافی نمیباشد /"', 'danger')
             return render(request, 'cart/detail.html', {'cart': cart})
     return redirect('orders:detail', order.id)
+
+
+def add_address(request, order_id):
+    address_form =  AddressOrderForm(request.POST)
+    if address_form.is_valid():
+        address = address_form.cleaned_data.get('address')
+        city = address_form.cleaned_data.get('city')
+        phone = address_form.cleaned_data.get('phone')
+        address = Addresses.objects.create(user=request.user, address=address, city=city, phone=phone)
+        address.save()
+        return redirect('orders:detail', order_id)
 
 
 def coupon_apply(request, order_id):
@@ -52,9 +98,10 @@ def coupon_apply(request, order_id):
             return redirect('orders:detail', order_id)
 
 
-def complete_order(request):
+
+def complete_order(request, order_id):
     cart = Cart(request)
-    order = Order.objects.get(user=request.user.id, active=True)
+    order = Order.objects.get(user=request.user.id, id=order_id)
     message = "پرداخت با موفقیت انجام شد."
     order.active = False
     order.payment = True

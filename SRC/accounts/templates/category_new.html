@@ -1,19 +1,32 @@
 {% extends "base.html" %}
+{% load bootstrap_icons %}
 {% load crispy_forms_tags %}
+{% block page_style %}
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.rtl.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% endblock %}
 {% block content %}
-<div class="site-section">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <hr />
-                <h4>Create a product</h4>
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form|crispy }}
-                    <button type='submit' class='btn btn-primary'>Submit</button>
-                </form>
+    {% if user.is_staff == True or user.is_superuser == True %}
+        <div class="site-section">
+            <div class="container py-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>اضافه کردن دسته جدید</h4>
+                        <hr />
+                        <form method="POST" class="form-group"  enctype="multipart/form-data" >
+                            {% csrf_token %}
+                            {{form|crispy}}
+                            <br/>
+                            <button type='submit' class='btn btn-primary'>ارسال</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
+    {% else %}
+    <div class="container py-5">
+        {% bs_icon 'exclamation-triangle-fill' color='red' size='3rem'  %}
+        <br/>
+        <h2 class="text-danger"> شما مجوز دسترسی به این صفحه را ندارید</h2>
     </div>
-</div>
+    {% endif %}
 {% endblock content %}

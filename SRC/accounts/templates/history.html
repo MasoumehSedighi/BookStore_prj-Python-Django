@@ -1,19 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="container">
-        <div class="cart mt-3 p-5">
+    <div class="container py-5">
+        <div class="cart py-3">
+        <h4>تاریخچه سفارشات</h4>
+        <hr>
             {% for rs in orders %}
                 {% if rs.payment == True %}
-                    <h4 class="text-warning"> سفارشات پرداخت شده</h4>
-                    <hr>
-                    <h6><span>شماره سفارش :</span><span class="text-success">{{ rs.reference_number }}</span> &nbsp
-                        <span> قیمت : </span> <span class="text-success">{{ rs.get_total_price }}</span></h6>
+                    <h6><span>شماره سفارش :</span><span class="text-primary">&nbsp;{{ rs.reference_number }}</span> &nbsp;
+                        <span> قیمت : </span> <span class="text-dark">&nbsp;{{ rs.get_total_price }}</span> &nbsp;&nbsp;
+                          <span> وضعیت : </span><span class="text-success">پرداخت شده</span>
+                    </h6>
                 {% else %}
                     <br/>
-                    <h4 class="text-danger"> سفارشات پرداخت نشده</h4>
                     <hr>
-                    <h6><span>شماره سفارش :</span><a><span class="text-success">{{ rs.reference_number }}</span><a> &nbsp
-                        <span> قیمت : </span> <span class="text-success">{{ rs.get_total_price }}</span></h6>
+                    <h6><span>شماره سفارش :</span><span class="text-primary">{{ rs.reference_number }}</span>&nbsp;
+                        <span> قیمت : </span> <span class="text-success">{{ rs.get_total_price }}</span>&nbsp;&nbsp;
+                        <span> وضعیت : </span><span  class="text-danger">پرداخت نشده</span>
+                    </h6>
                 {% endif %}
                 <hr>
             {% endfor %}

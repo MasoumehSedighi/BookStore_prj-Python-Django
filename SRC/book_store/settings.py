@@ -38,9 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_bootstrap_icons',
-    # Add my tag
-    'crispy_forms',
     'widget_tweaks',
+    'crispy_forms',
     # my app
     'accounts.apps.CustomerConfig',
     'books.apps.BookConfig',
@@ -63,7 +62,8 @@ ROOT_URLCONF = 'book_store.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR/'templates', BASE_DIR/'books/templates/books', BASE_DIR/'orders/templates/order'],
+        'DIRS': [BASE_DIR/'templates', BASE_DIR/'books/templates/books', BASE_DIR/'orders/templates/order',
+                 BASE_DIR/'cart/templates', BASE_DIR/'accounts/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,7 +78,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'book_store.wsgi.application'
 AUTH_USER_MODEL = 'accounts.User'
-CRISPY_TEMPLATE_PACK = 'uni_form'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -127,7 +127,14 @@ USE_L10N = True
 
 USE_TZ = True
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'masoumeh.sedighii@gmail.com'
+EMAIL_HOST_PASSWORD = 'enpjndgnbjwueaen'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/

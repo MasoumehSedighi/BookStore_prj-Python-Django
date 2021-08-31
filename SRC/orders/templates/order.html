@@ -1,24 +1,115 @@
 {% extends 'base.html' %}
-{% block content %}
-    <h3> شماره سفارش : {{ order.reference_number }}</h3>
-    <p>مبلغ قابل پرداخت : {{ order.get_total_price }} </p><br/>
+{% load static %}
 
-    <form action="{% url 'orders:coupon_apply' order.id %}" method="post">
-        {% csrf_token %}
-        <span>کد تخفیف  </span>{{ form.code }}
-        <input type="submit" value="ارسال">
-    </form>
-    <br/>
-    {% if messages %}
-        <div class="alert alert-dismissible alert-danger w-25 h-25 ">
-            {% for message in messages %}
-            <h6 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h6>
-            {% endfor %}
-        </div>
-    {% endif %}
-    {% if order %}
-        <a href="{% url 'orders:complete_order' %}">
-            <input type="submit" id="btn-logic" class="btn btn-success" value="Purchase">
-        </a>
-    {% endif %}
+<script>
+{% block jquery %}
+
+$(".radio-label").click(function(){
+  $("label").removeClass('radio-label-selected');
+  $(this).addClass('radio-label-selected');
+});
+
+$(".shipping-label").click(function(){
+  $("label").removeClass('shipping-label-selected');
+  $(this).addClass('shipping-label-selected');
+});
+
 {% endblock %}
+</script>
+{% block page_style %}
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.rtl.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+     <link rel="stylesheet" href={% static 'css/order.css' %}>
+{% endblock %}
+
+{% block content %}
+
+        <section class="container py-5">
+            <div class="row">
+                <div class="col-4"><h3> شماره سفارش : {{ order.reference_number }}</h3></div>
+                <div class="col-4 h3">مبلغ قابل پرداخت : {{ order.get_total_price }} </div>
+            </div>
+
+
+            <hr>
+
+            <form action="{% url 'orders:coupon_apply' order.id %}" method="post">
+                {% csrf_token %}
+                <span>کد تخفیف </span>{{coupon_form.code }}
+                <input type="submit" value="ارسال">
+            </form>
+            <br/>
+            {% if messages %}
+                <div class="alert alert-dismissible alert-danger w-25 h-25 ">
+                    {% for message in messages %}
+                    <h6 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h6>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <!-- new address order -->
+            <form method='POST' action="" id="payment-form"> {% csrf_token %}
+                {% if shipping_addresses  %}
+                    <h3>آدرس فعلی</h3>
+
+                    {% for address in shipping_addresses %}
+
+                        {% if request.user.userdefaultaddress.shipping.id == address.id %}
+                            <label class='shipping-label shipping-label-selected'>
+                            <input type='radio' name='shipping_address' value='{{ address.id }}' checked='checked'/> {{ address.get_address }} <br/>
+                            </label>
+                        {% else %}
+                            <label class='shipping-label'>
+                            <input type='radio' name='shipping_address' value='{{ address.id }}' /> {{ address.get_address }} <br/>
+                        {% endif %}
+                            </label>
+                    {% endfor %}
+
+                    <hr>
+                    {% endif %}
+                        {% if  current_addresses  %}
+
+                        <h3>سایر آدرس </h3>
+
+                        {% for address in current_addresses %}
+
+                            {% if request.user.userdefaultaddress.shipping.id == address.id %}
+                                <label class='radio-label radio-label-selected'>
+                                <input type='radio' name='shipping_address' value='{{ address.id }}' checked='checked'/> {{ address.get_address }}
+                                </label>
+                            {% else %}
+                                <label class='radio-label'>
+                                <input type='radio' name='shipping_address' value='{{ address.id }}' /> {{ address.get_address }}
+
+                            {% endif %}
+                                </label><br/>
+                        {% endfor %}
+                    {% endif %}
+                <br/>
+                <div class="row justify-content-end pl-5">
+                    <input type="submit" id="btn-logic" class="btn btn-success pl-5" value="تایید و پرداخت" style="width: 200px">
+                </div>
+
+            </form>
+
+
+                <hr>
+
+                <h3>آدرس جدید </h3>
+
+                <form method='POST' action="{% url 'orders:add_address' order.id %}">{% csrf_token %}
+                    <div class="row">
+                        <div class="col-2">&nbsp;&nbsp;شهر{{ address_form.city }}</div>
+                        <div class="col-4">&nbsp;&nbsp;آدرس{{ address_form.address }}</div>
+                        <div class="col-2">&nbsp;&nbsp;تلفن{{ address_form.phone }}</div>
+                        <div class="col-1"> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+                    </div>
+                    <br/>
+                    <div ><input type='submit' value='ثبت'  class='btn btn-primary' /></div>
+                </form>
+
+
+
+             <!--  finish new address order -->
+        </section>
+{% endblock %}
+
+

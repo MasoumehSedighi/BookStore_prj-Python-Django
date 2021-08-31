@@ -1,18 +1,82 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.shortcuts import render, redirect, reverse
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.contrib.auth.decorators import login_required
+from django.views import View
+from django.utils.encoding import force_text, force_bytes
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.sites.shortcuts import get_current_site
+from six import text_type
 
 from books.models import Book, Category
 from orders.models import Order
-from .forms import UserLoginForm, UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, AddressUpdateForm, \
-    AddressForm
+from .forms import UserLoginForm, UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, AddressForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import User, Addresses, UserProfile
+from .models import User, Addresses, UserProfile, UserDefaultAddress
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
+from django.core.mail import EmailMessage
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+
+
+class EmailToken(PasswordResetTokenGenerator):
+    """برای ایجاد token هنگام ارسال ایمیل"""
+
+    def _make_hash_value(self, user, timestamp):
+        return (text_type(user.is_active) + text_type(user.id) + text_type(timestamp))
+
+
+email_generator = EmailToken()
+
+
+def user_register(request):
+    """فانکشن برای ثبت نام کاربران میباشد"""
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email',)
+            password = form.cleaned_data.get('password1',)
+            first_name = form.cleaned_data.get('first_name',)
+            last_name = form.cleaned_data.get('last_name',)
+            address = form.cleaned_data.get('address',)
+            user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, password=password,)
+            address = Addresses.objects.create(user=user, address=address, default=True)
+            address.save()
+            user.is_active = False
+            user.save()
+            """احراز هویت کاربر"""
+            domain = get_current_site(request).domain
+            uidb64 = urlsafe_base64_encode(force_bytes(user.id))
+            url = reverse('accounts:active',kwargs={'uidb64': uidb64,'token': email_generator.make_token(user)})
+            link = 'http://'+domain + url
+            email = EmailMessage(
+                'فعال شدن یوزر',
+                link,
+                'test<masoumeh.sedighii@gmail.com>',
+                [email]
+            )
+            email.send(fail_silently=False)
+            messages.warning(request, 'کاربر محترم جهت فعالسازی به ایمیل خود مراجعه فرمایید', 'warning')
+            return redirect('book:home')
+    else:
+        form = UserRegistrationForm()
+    return render(request, 'register.html', {'form': form})
+
+
+class RegisterEmail(View):
+    """بعد ار تایید فرم رجیستر توسط کاربر توکن و یوزر چک مبشود و میتواند لاکین کند"""
+    def get(self, request, uidb64, token):
+        id = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(id=id)
+        if user and email_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+            return redirect('accounts:login')
 
 
 def user_login(request):
+    """مند برای لاکین کردن کاربر میباشد"""
     if request.method == 'POST':
         form = UserLoginForm(request.POST)
         if form.is_valid():
@@ -22,7 +86,7 @@ def user_login(request):
             print(cd)
             if user is not None:
                 login(request, user)
-                messages.success(request, 'you logged in successfully', 'success')
+                messages.success(request, 'شما با موفقیت از وارد سایت شدید', 'success')
                 return redirect('book:home')
             else:
                 messages.error(request, 'ایمیل با پسورد اشتباه است', 'danger')
@@ -32,37 +96,19 @@ def user_login(request):
 
 
 def user_logout(request):
+    """ متذ برای خروج کاربر میباشد"""
     logout(request)
-    messages.success(request, 'you logged out successfully', 'success')
+    messages.success(request, 'شما با موفقیت از سایت خارج شدید', 'success')
     return redirect('book:home')
 
 
-def user_register(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password1')
-            first_name = form.cleaned_data.get('first_name')
-            last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
-            user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, password=password,)
-            address = Addresses.objects.create(user=user, address=address, default=True)
-            address.save()
-            user.is_active = False
-            user.save()
-            messages.success(request, 'you registered successfully', 'success')
-            return redirect('book:home')
-    else:
-        form = UserRegistrationForm()
-    return render(request, 'register.html', {'form': form})
-
-
 def user_profile(request):
+    """ساخت پروفایل کاربر"""
     profile = UserProfile.objects.get(user_id=request.user.id)
     return render(request, 'user_panel.html', {'profile': profile})
 
 
+@login_required
 def user_update(request):
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=request.user)
@@ -79,22 +125,25 @@ def user_update(request):
     return render(request, 'update.html', context)
 
 
-class AddressUpdateView(UpdateView):
+class AddressUpdateView(LoginRequiredMixin, UpdateView):
+    """بروز رسانی آدرس توسط کاربر"""
     model = Addresses
     template_name = 'address_update.html'
     fields = '__all__'
     success_url = reverse_lazy('accounts:profile')
 
 
-class AddressDeleteView(DeleteView):
-    """حذف کردن کتاب توسط کارمند و ادمین"""
+class AddressDeleteView(LoginRequiredMixin, DeleteView):
+    """حذف کردن آدرس توسط کاربر"""
     model = Addresses
     template_name = 'address_delete.html'
     fields = '__all__'
     success_url = reverse_lazy('accounts:address_profile')
 
 
+@login_required
 def user_add_address(request):
+    """اصافه کردن آدری در پروفایل توسط کاربر میباشذ"""
     if request.method == 'POST':
         form = AddressForm(request.POST)
         if form.is_valid():
@@ -109,8 +158,9 @@ def user_add_address(request):
     return render(request, 'address_new.html', {'form': form})
 
 
+@login_required
 def history_order(request):
-    """تاریخچه سفارشات را نشان میدهد"""
+    """تاریخچه سفارشات را در پروفایل کاربر نشان میدهد"""
     current_user = request.user
     orders = Order.objects.filter(user_id=current_user.id)
     context = {
@@ -119,6 +169,7 @@ def history_order(request):
     return render(request, 'history.html', context)
 
 
+@login_required
 def address_profile(request):
     """آدرس هر کاربر را در پروفایلش نشان میدهد"""
     current_user = request.user
@@ -152,15 +203,16 @@ class Complete(auth_views.PasswordResetCompleteView):
     template_name = 'complete.html'
 
 
-class BookCreateView(CreateView):
+class BookCreateView(LoginRequiredMixin, CreateView):
     """اضافه کردن کتاب توسط کارمند و ادمین"""
+    permission_required = 'Book.add_book'
     model = Book
     template_name = 'book_new.html'
     fields = '__all__'
     success_url = reverse_lazy('accounts:profile')
 
 
-class CategoryCreateView(CreateView):
+class CategoryCreateView(LoginRequiredMixin, CreateView):
     """اضافه کردن دسته بندی توسط کارمند و ادمین"""
     model = Category
     template_name = 'category_new.html'
@@ -168,7 +220,7 @@ class CategoryCreateView(CreateView):
     success_url = reverse_lazy('accounts:profile')
 
 
-class BookDeleteView(DeleteView):
+class BookDeleteView(LoginRequiredMixin,DeleteView):
     """حذف کردن کتاب توسط کارمند و ادمین"""
     model = Book
     template_name = 'book_delete.html'
@@ -177,7 +229,7 @@ class BookDeleteView(DeleteView):
     success_url = reverse_lazy('accounts:profile')
 
 
-class BookListView(ListView):
+class BookListView(LoginRequiredMixin, ListView):
     """این متد لیست نمام کتاب ها را به مدیر و کارمند نشان میدهد"""
     model = Book
     template_name = 'staff_book_list.html'
@@ -189,9 +241,13 @@ class BookListView(ListView):
         return context
 
 
-class BookUpdateView(UpdateView):
+class BookUpdateView(LoginRequiredMixin, UpdateView):
+    """ویرایش کتاب توسط کارمند و ادمین"""
     model = Book
     template_name = 'staff_book_update.html'
     fields = '__all__'
 
     success_url = reverse_lazy('accounts:profile')
+
+
+

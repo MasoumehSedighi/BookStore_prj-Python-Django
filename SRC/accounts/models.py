@@ -2,19 +2,47 @@ from .managers import UserManager
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.conf import settings
-from django.db.models.signals import post_save, m2m_changed
+from django.db.models.signals import post_save
+
+""" new for address"""
 
 
-# Create your models here.
+class UserDefaultAddress(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    shipping = models.ForeignKey("Addresses", null=True, blank=True, on_delete=models.CASCADE,
+                                 related_name="user_address_shipping_default")
+
+    def __str__(self):
+        return f'{self.user.email}'
+
+
+class UserAddressManager(models.Manager):
+    def get_shipping_addresses(self, user):
+        return super(UserAddressManager, self).filter(default=True).filter(user=user)
+
+
+"""finish new address"""
+
+
 class Addresses(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='کاربر')
     address = models.CharField(max_length=200, blank=True, null=True, verbose_name='آدرس')
     city = models.CharField(max_length=40, blank=True, null=True, verbose_name='شهر')
     phone = models.CharField(max_length=24, blank=True, null=True, verbose_name='تلفن')
     default = models.BooleanField(default=False, verbose_name='پیش فرض')
+    objects = UserAddressManager()
 
     def __str__(self):
-        return f'{self.user}'
+        return f'{self.city} - {self.address}'
+
+    def __unicode__(self):
+        return self.get_address()
+
+    def get_address(self):
+        return "%s, %s" % (self.address, self.city)
+
+    class Meta:
+        ordering = ['-city', ]
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -76,7 +104,7 @@ class UserProfile(models.Model):
         return self.user.first_name
 
     def full_name(self):
-        return self.user.first_name + '' + self.user.last_name
+        return self.user.first_name + ' ' + self.user.last_name
 
     class Meta:
         verbose_name = 'پروفایل'

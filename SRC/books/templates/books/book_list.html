@@ -7,13 +7,16 @@
     لیست کتاب
 {% endblock title %}
 {% block content %}
-    <div class="row justify-content-center my-3">
-        <div class="col-9 ">
+    <div class="row container ">
+        <div class="col-9 my-5 mx-3">
             <h3> کتاب ها</h3>
             <hr>
             {% for book in book_list %}
-                <div class="row">
-                    <div class="col-8 card py-3">
+                <div class="row  mx-3">
+                    <div class="col-3 ">
+                        <img src="{{ book.image.url }} " class="py-3 w-25 rounded mx-auto d-block" alt="showcase">
+                    </div>
+                    <div class="col-9 card py-3">
                         <div class="card-header">
                             <p><a class=" text-decoration-none" href="{{ book.get_absolute_url }}">
                             <span class="font-weight-bold">نام کتاب: {{ book.title }} |</span></a>
@@ -22,9 +25,7 @@
                             <p>Group: {% for category in book.category.all %}{{ category }}<br/>{% endfor %}</p>
                         </div>
                     </div>
-                    <div class="col-4">
-                        <img src="{{ book.image.url }} " class="py-3 w-25 rounded mx-auto d-block" alt="showcase">
-                    </div>
+
                 </div>
             {% endfor %}
         </div>

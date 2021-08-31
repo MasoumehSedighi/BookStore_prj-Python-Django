@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}
-profile
+پروفایل
 {% endblock %}
 {% block content %}
-    <section class="container my-5">
+    <section class="container py-5 ">
         <div class="row">
-            <p ><span class=" h3 text-warning"> خوش آمدید</span> <span class=" h3 text-success">{{ profile.user.first_name }}</span> </p>
+            <p ><span class=" h3 text-primary"> خوش آمدید</span> <span class=" h3 text-success">{{ profile.user.first_name }}</span> </p>
             <br/>
             <div class="col-6">
                 {% if user.is_staff == True and user.is_superuser == True %}
@@ -29,7 +29,13 @@ profile
                         <br/>
                         <br/>
                         <a class="text-decoration-none" href="{% url 'accounts:category_new' %}">اضافه کردن دسته بندی جدید</a>
+                        <br/>
+                        <br/>
+                        <a class="text-decoration-none" href="{% url 'accounts:staff_book_list' %}">
+                            لیست کامل کتاب ها (ویرایش- حذف)</a>
                 {% else %}
+                        <h5>پنل مدیریت</h5>
+                        <hr>
                         <a class="text-decoration-none" href="{% url 'accounts:update' %}">بروزرسانی</a>
                         <br/>
                         <br/>
