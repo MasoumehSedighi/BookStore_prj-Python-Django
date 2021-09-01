@@ -89,10 +89,8 @@ class AddressUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ('comment',)
-        widgets = {
-            'comment': TextInput(attrs={'class': 'input', 'placeholder': 'comment'}),
-        }
+        fields = ['image', ]
+
 
 
 

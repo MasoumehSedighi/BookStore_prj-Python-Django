@@ -2,8 +2,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
-from django.views.decorators.http import require_POST
-
 
 from accounts.models import Addresses
 from books.models import Book
@@ -18,13 +16,14 @@ def detail(request, order_id):
 
     order = get_object_or_404(Order, id=order_id)
     coupon_form = CouponForm()
-    """start new address"""
+    """گرفتن آدرس جدید و لیستی از آدرس های مشتری و آدرس دیفالت"""
     address_form = AddressOrderForm()
     current_addresses = Addresses.objects.filter(user=request.user)
     shipping_addresses = Addresses.objects.get_shipping_addresses(user=request.user)
     print(current_addresses)
     print(shipping_addresses)
     if request.method == "POST":
+        """گرفتن آی دی آدرس انتخاب شده با نام تگ 'shipping_address' و ذخیره آن در فیل shipping_address آن سفارش"""
         shipping_a = request.POST['shipping_address']
         shipping_address_instance = Addresses.objects.get(id=shipping_a)
         order.shipping_address = shipping_address_instance
@@ -43,7 +42,6 @@ def detail(request, order_id):
         "shipping_addresses": shipping_addresses,
 
     }
-    """finish new address"""
 
     return render(request, 'order.html', context)
 
@@ -58,6 +56,7 @@ def order_create(request):
                                               price=item['price'], quantity=item['quantity'], discount=item['discount'])
 
         book = Book.objects.get(id=order_item.book.id)
+        """چک میکند اگر تعداد کالا از موجودی کمتر بود ار تعداد موجودی کم میکند"""
         if book.stock >= order_item.quantity:
             book.stock = book.stock - order_item.quantity
             book.sold = book.sold + order_item.quantity
@@ -71,6 +70,7 @@ def order_create(request):
 
 
 def add_address(request, order_id):
+    """گرفتن آدرس جدید در فرم ذر ثبت نهایی سفارش"""
     address_form = AddressOrderForm(request.POST)
     if address_form.is_valid():
         address = address_form.cleaned_data.get('address')
@@ -82,6 +82,7 @@ def add_address(request, order_id):
 
 
 def coupon_apply(request, order_id):
+    """کرفتن کد کوپن تخفیف و جایگرینی مفدار آن در فیلذ تخفیف آن سفارش """
     now = timezone.now()
     form = CouponForm(request.POST)
     if form.is_valid():
@@ -98,6 +99,7 @@ def coupon_apply(request, order_id):
 
 
 def complete_order(request, order_id):
+    """مرحله آخر و تکمیل سفارش"""
     cart = Cart(request)
     order = Order.objects.get(user=request.user.id, id=order_id)
     message = "پرداخت با موفقیت انجام شد."

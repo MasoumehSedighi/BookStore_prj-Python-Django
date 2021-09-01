@@ -42,6 +42,7 @@ class Order(models.Model):
     def get_total_price(self):
         total = sum(item.get_cost() for item in self.items.all())
         if self.discount:
+            """در صورت تخفیف کپن از قیمت کل سفارش کم میکند"""
             discount_price = (self.discount / 100) * total
             return int(total - discount_price)
         return total

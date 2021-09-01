@@ -4,24 +4,10 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.conf import settings
 from django.db.models.signals import post_save
 
-""" new for address"""
-
-#
-# class UserDefaultAddress(models.Model):
-#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#     shipping = models.ForeignKey("Addresses", null=True, blank=True, on_delete=models.CASCADE,
-#                                  related_name="user_address_shipping_default")
-#
-#     def __str__(self):
-#         return f'{self.user.email}'
-
 
 class UserAddressManager(models.Manager):
     def get_shipping_addresses(self, user):
         return super(UserAddressManager, self).filter(default=True).filter(user=user)
-
-
-"""finish new address"""
 
 
 class Addresses(models.Model):
@@ -97,8 +83,8 @@ class Staff(User):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='کاربر')
-    image = models.ImageField(blank=True, upload_to='images/users/', verbose_name='عکس پروفایل')
-    comment = models.CharField(max_length=200, blank=True, null=True, verbose_name='نظرات')
+    image = models.ImageField(blank=True, upload_to='images/', verbose_name='عکس پروفایل')
+
 
     def __str__(self):
         return self.user.first_name

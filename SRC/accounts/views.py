@@ -1,5 +1,4 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django.contrib.auth.decorators import login_required
@@ -20,7 +19,7 @@ from .models import User, Addresses, UserProfile
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 from django.core.mail import EmailMessage
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class EmailToken(PasswordResetTokenGenerator):
@@ -48,7 +47,7 @@ def user_register(request):
             address.save()
             user.is_active = False
             user.save()
-            """احراز هویت کاربر"""
+            """احراز هویت کاربر و ارسال ایمیل به کاربر"""
             domain = get_current_site(request).domain
             uidb64 = urlsafe_base64_encode(force_bytes(user.id))
             url = reverse('accounts:active',kwargs={'uidb64': uidb64,'token': email_generator.make_token(user)})
@@ -113,9 +112,10 @@ def user_profile(request):
 
 @login_required
 def user_update(request):
+    """اطلاعات کاربر و پروفایل آن را بروزرسانی میکند"""
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=request.user)
-        profile_form = ProfileUpdateForm(request.POST, instance=request.user.userprofile)
+        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.userprofile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()

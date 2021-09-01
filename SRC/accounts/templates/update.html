@@ -7,13 +7,23 @@
 {% endblock %}
 {% block title %}ویرایش اطلاعات{% endblock %}
 {% block content %}
+    <section class="py-2 px-3">
+        {% if messages %}
+            <div class="w-25 h-25 ">
+                {% for message in messages %}
+                <h6 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h6>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+    <br/>
     {% if user.is_staff == False or user.is_superuser == False %}
         <section class="container py-5">
         <h3>بروز رسانی</h3>
             <hr>
         <div class="row  ">
             <div class="col-6">
-                <form action="" method='post' >
+                <form action="" method='post' enctype="multipart/form-data" >
                     {% csrf_token %}
                     {{ user_form|crispy}}
                     <br/>

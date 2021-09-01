@@ -7,21 +7,6 @@ from books.models import Book, Category
 from cart.forms import CartAddForm
 
 
-# Create your views here.
-
-# class HomeListView(ListView):
-#     """این متد لیست نمام کتاب ها را در خانه نشان میدهد"""
-#     paginate_by = 6
-#     model = Book
-#     template_name = 'books/home.html'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(HomeListView, self).get_context_data(**kwargs)
-#         context['book_list'] = Book.objects.all()
-#         context['top_sold'] = Book.objects.all().order_by('-sold')[:2]
-#         print(context)
-#         return context
-
 
 class BookListView(ListView):
     """این متد لیست نمام کتاب ها را نشان میدهد"""

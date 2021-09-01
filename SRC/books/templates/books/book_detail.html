@@ -7,24 +7,33 @@
 {% block title %}
     {{ object.title }}
 {% endblock title %}
+{% block jquery %}<script src="https://code.jquery.com/jquery-1.12.4.js"></script>{% endblock%}
 {% block content %}
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <div class="book-detail py-5 px-3 container">
+    <section class="row mx-5">
 
-        <h2 class="text-success">{{ object.title }}</h2>
-        <br/>
-        <p><span> نام نویسنده </span> : {{ object.author }}</p>
-        <p><span> قیمت </span> :{{ object.price }}</p>
-        <p><span> تخفیف </span> :{{ book.get_item_discount }}</p>
-        <p><span> موجودی</span> : {{ object.stock }}</p>
-        <form  action="{% url 'cart:cart_add' book.id %}" method="post">
-            {% csrf_token %}
-            <span>تعداد</span> : {{ form.quantity }}
+        <div class="col-4 py-5 px-5 container">
+
+            <h4 class="text-success">{{ object.title }}</h4>
             <br/>
-            <br/>
-            <input class="btn-warning" id="cart_form" type="submit" value="افزودن به سبد">
-        </form>
-    </div>
+            <p><span> نام نویسنده </span> : {{ object.author }}</p>
+            <p><span> قیمت </span> :{{ object.price }}</p>
+            <p><span> تخفیف </span> :{{ book.get_item_discount }}</p>
+            <p><span> موجودی</span> : {{ object.stock }}</p>
+            <form  action="{% url 'cart:cart_add' book.id %}" method="post">
+                {% csrf_token %}
+                <span>تعداد</span> : {{ form.quantity }}
+                <br/>
+                <br/>
+                <input class="btn-warning" id="cart_form" type="submit" value="افزودن به سبد">
+            </form>
+        </div>
+        <div class="py-5 col-4">
+            <img src="{{ object.image.url }} "  class="py-3 rounded mx-auto d-block" alt="showcase"
+                                         style=" width: 250px; height: 400px;">
+        </div>
+        <div class="col-4">
+        </div>
+    </section>
     <script>
         $("#cart_form").click(function() {
           alert("کالا به سبد اضافه شد");

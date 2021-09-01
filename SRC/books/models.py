@@ -85,6 +85,7 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
+
     def get_absolute_url(self):
         return reverse('book:book_detail', args={self.slug})
 
@@ -102,6 +103,7 @@ class Book(models.Model):
         return self.stock
 
     def get_item_discount(self):
+        """تخفیف موردی را در صورت وجود در فیلذ آن برمیگرداند تا از قیمت آن کتاب کم کند"""
         if self.cash_discount:
             discount = self.cash_discount.amount
             return Decimal(discount)
