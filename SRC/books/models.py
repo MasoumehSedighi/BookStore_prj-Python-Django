@@ -18,6 +18,9 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('book:category_menu', args={self.id})
+
 
 class DiscountCash(models.Model):
     name = models.CharField(max_length=50, null=True, verbose_name='نام')

@@ -34,6 +34,13 @@ profile
             <br/>
             <a href="{% url 'accounts:address_new' %}">اضافه کردن آدرس</a>
         </section>
+        {% if messages %}
+            <div class="alert alert-dismissible alert-danger w-50 h-25 ">
+                {% for message in messages %}
+                <h6 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h6>
+                {% endfor %}
+            </div>
+        {% endif %}
     {% else %}
         <div class="container py-5">
             {% bs_icon 'exclamation-triangle-fill' color='red' size='3rem'  %}

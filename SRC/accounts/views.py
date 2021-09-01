@@ -16,7 +16,7 @@ from .forms import UserLoginForm, UserRegistrationForm, UserUpdateForm, ProfileU
     AddressUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import User, Addresses, UserProfile, UserDefaultAddress
+from .models import User, Addresses, UserProfile
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 from django.core.mail import EmailMessage
@@ -159,12 +159,13 @@ class AddressDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('accounts:address_profile')
 
     def delete(self, request, *args, **kwargs):
-        """عدم امکان حذف آدرس پیش فرض"""
+        """عدم امکان حذف حداقل یک آدرس"""
         object_addr = self.get_object()
-        if not object_addr.default:
+        count_address = Addresses.objects.filter(user=request.user).count()
+        if count_address > 1:
             object_addr.delete()
         else:
-            messages.success(request, 'کاربر گرامی امکان حذف آدرس پیش فرض نمیباشد', 'success')
+            messages.success(request, 'کاربر گرامی امکان حذف آدرس نمیباشد', 'success')
         return redirect('accounts:address_profile')
 
 

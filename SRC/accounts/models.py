@@ -6,14 +6,14 @@ from django.db.models.signals import post_save
 
 """ new for address"""
 
-
-class UserDefaultAddress(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    shipping = models.ForeignKey("Addresses", null=True, blank=True, on_delete=models.CASCADE,
-                                 related_name="user_address_shipping_default")
-
-    def __str__(self):
-        return f'{self.user.email}'
+#
+# class UserDefaultAddress(models.Model):
+#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#     shipping = models.ForeignKey("Addresses", null=True, blank=True, on_delete=models.CASCADE,
+#                                  related_name="user_address_shipping_default")
+#
+#     def __str__(self):
+#         return f'{self.user.email}'
 
 
 class UserAddressManager(models.Manager):

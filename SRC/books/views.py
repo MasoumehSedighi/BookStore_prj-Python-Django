@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.db.models import Q
+from django.shortcuts import get_object_or_404, render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormMixin
 from books.models import Book, Category
@@ -8,18 +9,18 @@ from cart.forms import CartAddForm
 
 # Create your views here.
 
-class HomeListView(ListView):
-    """این متد لیست نمام کتاب ها را در خانه نشان میدهد"""
-    paginate_by = 6
-    model = Book
-    template_name = 'books/home.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(HomeListView, self).get_context_data(**kwargs)
-        context['book_list'] = Book.objects.all()
-        context['top_sold'] = Book.objects.all().order_by('-sold')[:2]
-        print(context)
-        return context
+# class HomeListView(ListView):
+#     """این متد لیست نمام کتاب ها را در خانه نشان میدهد"""
+#     paginate_by = 6
+#     model = Book
+#     template_name = 'books/home.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(HomeListView, self).get_context_data(**kwargs)
+#         context['book_list'] = Book.objects.all()
+#         context['top_sold'] = Book.objects.all().order_by('-sold')[:2]
+#         print(context)
+#         return context
 
 
 class BookListView(ListView):
@@ -74,4 +75,15 @@ class BookDetailView(FormMixin, DetailView):
         return context
 
 
-
+def category_menu(request):
+    category = request.GET.get('category')
+    if category is None:
+        books = Book.objects.all().order_by('-sold')[:2]
+    else:
+        books = Book.objects.filter(category__title=category)
+    categories = Category.objects.all()
+    context = {
+        'books': books,
+        'categories': categories
+    }
+    return render(request, 'books/home.html', context)

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block page_style %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.rtl.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
      <link rel="stylesheet" href={% static 'css/home.css' %}>
 {% endblock %}
 {% load static %}
@@ -8,6 +9,22 @@
     فروشگاه کتاب
 {% endblock title %}
 {% block content %}
+
+    <div >
+    <ul class=" px-5 list-group bg-warning m-0 p-0 list-group-horizontal">
+        <li class=" bg-warning list-group-item">
+          <a class=" text-decoration-none bg-warning text-center" href="{% url "book:home" %}">پرفروش ها</a>
+        </li>
+            {% for cat in categories %}
+                <li class=" bg-warning list-group-item">
+                    <a class=" text-decoration-none bg-warning text-center" href="{% url "book:home" %}?category={{ cat.title }}">{{ cat.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+
+    <!--t -->
     <section class="py-2 px-3">
         {% if messages %}
             <div class="w-25 h-25 ">
@@ -18,11 +35,10 @@
         {% endif %}
     </section>
     <br/>
-    <h4 class="px-5 text-primary"> کتاب های پرفروش </h4>
     <section class=" py-5 px-3">
         <div class="row  px-5">
             <div class="col-9">
-                {% for book in top_sold %}
+                {% for book in books %}
                     <div class="card " style="width:16rem; display:inline-block">
                         <img src="{{ book.image.url }} "  class="py-3 rounded mx-auto d-block" alt="showcase"
                              style=" width: 150px; height: 250px;">
@@ -43,26 +59,6 @@
             </div>
         </div>
     </section>
-                    <!-- تقسیم بندی صفحات لیست کتاب ها  -->
-{#                    <div class="pagination px-5">#}
-{#                        <span class="step-links">#}
-{#                            {% if page_obj.has_previous %}#}
-{#                                <a href="?page=1">&laquo; first</a>#}
-{#                                <a href="?page={{ page_obj.previous_page_number }}">previous</a>#}
-{#                            {% endif %}#}
-{##}
-{#                            <span class="current">#}
-{#                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.#}
-{#                            </span>#}
-{##}
-{#                            {% if page_obj.has_next %}#}
-{#                                <a href="?page={{ page_obj.next_page_number }}">next</a>#}
-{#                                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>#}
-{#                            {% endif %}#}
-{#                        </span>#}
-{#                    </div>#}
-{#            </div>#}
-
 
 
 {% endblock content %}
