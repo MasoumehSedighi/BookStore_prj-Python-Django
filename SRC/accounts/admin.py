@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 # Register your models here.
-from .models import Customer, Addresses, Management, User, Staff, UserProfile
+from .models import Customer, Addresses, Management, User, Staff, UserProfile, UserDefaultAddress
 
 
 class AddressesInline(admin.TabularInline):
@@ -67,8 +67,8 @@ class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('full_name',)
     search_fields = ('full_name',)
 
-#
-# @admin.register(UserDefaultAddress)
-# class UserDefaultAddressAdmin(admin.ModelAdmin):
-#     list_display = ('user',)
-#     search_fields = ('user',)
+
+@admin.register(UserDefaultAddress)
+class UserDefaultAddressAdmin(admin.ModelAdmin):
+    list_display = ('user',)
+    search_fields = ('user',)

@@ -30,7 +30,7 @@ class Order(models.Model):
     active = models.BooleanField(default=True, verbose_name='فعال')
     payment = models.BooleanField(default=False, verbose_name='پرداخت')
     discount = models.IntegerField(blank=True, null=True, default=None, verbose_name='تخفیف ویژه')
-    shipping_address = models.ForeignKey(Addresses, on_delete=models.CASCADE, related_name='shipping_address', default=1)
+    shipping_address = models.ForeignKey(Addresses, on_delete=models.CASCADE, related_name='shipping_address', blank=True, null=True)
 
     def __str__(self):
         return self.reference_number

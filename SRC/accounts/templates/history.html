@@ -8,7 +8,7 @@
                 {% if rs.payment == True %}
                     <h6><span>شماره سفارش :</span><span class="text-primary">&nbsp;{{ rs.reference_number }}</span> &nbsp;
                         <span> قیمت : </span> <span class="text-dark">&nbsp;{{ rs.get_total_price }}</span> &nbsp;&nbsp;
-                        <span> وضعیت : </span><span class="text-success">پرداخت شده</span>
+                        <span> وضعیت : </span><span class="text-success">پرداخت شده</span>&nbsp;&nbsp;
                         <span> آدرس ارسال : </span> <span class="text-success">{{ rs.shipping_address }}</span>
                     </h6>
                 {% else %}

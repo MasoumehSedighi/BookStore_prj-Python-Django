@@ -10,6 +10,7 @@ from cart.forms import CartAddForm
 
 class BookListView(ListView):
     """این متد لیست نمام کتاب ها را نشان میدهد"""
+    paginate_by = 5
     model = Book
     template_name = 'books/book_list.html'
 
@@ -63,7 +64,7 @@ class BookDetailView(FormMixin, DetailView):
 def category_menu(request):
     category = request.GET.get('category')
     if category is None:
-        books = Book.objects.all().order_by('-sold')[:2]
+        books = Book.objects.all().order_by('-sold')[:6]
     else:
         books = Book.objects.filter(category__title=category)
     categories = Category.objects.all()

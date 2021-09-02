@@ -15,7 +15,7 @@ from .forms import UserLoginForm, UserRegistrationForm, UserUpdateForm, ProfileU
     AddressUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import User, Addresses, UserProfile
+from .models import User, Addresses, UserProfile, UserDefaultAddress
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 from django.core.mail import EmailMessage
@@ -44,6 +44,8 @@ def user_register(request):
             address = form.cleaned_data.get('address',)
             user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, password=password,)
             address = Addresses.objects.create(user=user, address=address, default=True)
+            default_address = UserDefaultAddress.objects.create(user=user, shipping=address)
+            default_address.save()
             address.save()
             user.is_active = False
             user.save()
@@ -180,7 +182,7 @@ def user_add_address(request):
             phone = form.cleaned_data.get('phone')
             address = Addresses.objects.create(user=request.user, address=address, city=city, phone=phone)
             address.save()
-            return redirect('accounts:profile')
+            return redirect('accounts:address_profile')
     else:
         form = AddressForm()
     return render(request, 'address_new.html', {'form': form})
@@ -237,7 +239,7 @@ class BookCreateView(LoginRequiredMixin, CreateView):
     model = Book
     template_name = 'book_new.html'
     fields = '__all__'
-    success_url = reverse_lazy('accounts:profile')
+    success_url = reverse_lazy('accounts:staff_book_list')
 
 
 class CategoryCreateView(LoginRequiredMixin, CreateView):
@@ -254,12 +256,13 @@ class BookDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'book_delete.html'
     fields = '__all__'
 
-    success_url = reverse_lazy('accounts:profile')
+    success_url = reverse_lazy('accounts:staff_book_list')
 
 
 class BookListView(LoginRequiredMixin, ListView):
     """این متد لیست نمام کتاب ها را به مدیر و کارمند نشان میدهد"""
     model = Book
+    paginate_by = 3
     template_name = 'staff_book_list.html'
 
     def get_context_data(self, **kwargs):
@@ -274,7 +277,7 @@ class BookUpdateView(LoginRequiredMixin, UpdateView):
     model = Book
     template_name = 'staff_book_update.html'
     fields = '__all__'
-    success_url = reverse_lazy('accounts:profile')
+    success_url = reverse_lazy('accounts:staff_book_list')
 
 
 

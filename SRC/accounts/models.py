@@ -5,6 +5,15 @@ from django.conf import settings
 from django.db.models.signals import post_save
 
 
+class UserDefaultAddress(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    shipping = models.ForeignKey("Addresses", null=True, blank=True, on_delete=models.CASCADE,
+                                 related_name="user_address_shipping_default")
+
+    def __str__(self):
+        return f'{self.user.email}'
+
+
 class UserAddressManager(models.Manager):
     def get_shipping_addresses(self, user):
         return super(UserAddressManager, self).filter(default=True).filter(user=user)
@@ -83,8 +92,7 @@ class Staff(User):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='کاربر')
-    image = models.ImageField(blank=True, upload_to='images/', verbose_name='عکس پروفایل')
-
+    image = models.ImageField(blank=True, upload_to='images/', default='images/user.png', verbose_name='عکس پروفایل')
 
     def __str__(self):
         return self.user.first_name

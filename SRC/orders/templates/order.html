@@ -52,7 +52,7 @@ $(".shipping-label").click(function(){
 
                     {% for address in shipping_addresses %}
 
-                        {% if address.default == True %}
+                        {% if request.user.userdefaultaddress.shipping.id == address.id %}
                             <label class='shipping-label shipping-label-selected'>
                             <input type='radio' name='shipping_address' value='{{ address.id }}' checked='checked'/> {{ address.get_address }} <br/>
                             </label>
@@ -71,7 +71,7 @@ $(".shipping-label").click(function(){
 
                         {% for address in current_addresses %}
 
-                            {% if address.default == True %}
+                             {% if request.user.userdefaultaddress.shipping.id == address.id %}
                                 <label class='radio-label radio-label-selected'>
                                 <input type='radio' name='shipping_address' value='{{ address.id }}' checked='checked'/> {{ address.get_address }}
                                 </label>

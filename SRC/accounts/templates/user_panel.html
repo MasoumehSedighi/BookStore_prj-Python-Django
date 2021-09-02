@@ -3,6 +3,15 @@
 پروفایل
 {% endblock %}
 {% block content %}
+        <section class="py-2 px-3">
+        {% if messages %}
+            <div class="w-25 h-25 ">
+                {% for message in messages %}
+                <h6 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h6>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
     <section class="container py-5 ">
         <div class="row">
             <p ><span class=" h3 text-primary"> خوش آمدید</span> <span class=" h3 text-success">{{ profile.user.first_name }}</span> </p>
@@ -34,7 +43,9 @@
                         <a class="text-decoration-none" href="{% url 'accounts:staff_book_list' %}">
                             لیست کامل کتاب ها (ویرایش- حذف)</a>
                 {% else %}
-                        <h5>پنل کاربری</h5>
+                        <span>پنل کاربری</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <img src="{{ profile.image.url }} "  class="py-3 rounded mx-auto d-block" alt="showcase"
+                            style=" width: 200px; height: 200px;">
                         <hr>
                         <a class="text-decoration-none" href="{% url 'accounts:update' %}">بروزرسانی</a>
                         <br/>
@@ -45,10 +56,7 @@
                         <a class="text-decoration-none" href="{% url 'accounts:address_profile' %}">مشاهده آدرس ها</a>
                 {% endif %}
             </div>
-            <div class="col-6">
-                <img src="{{ profile.image.url }} "  class="py-3 rounded mx-auto d-block" alt="showcase"
-                             style=" width: 200px; height: 200px;">
-            </div>
+
         </div>
 
     </section>
